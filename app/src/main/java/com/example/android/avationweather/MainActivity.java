@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
 
         // Obtain a reference to the SharedPreferences file for this app
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         // And register to be notified of preference changes
         // So we know when the user has adjusted the query settings
        // prefs.registerOnSharedPreferenceChangeListener(this);
@@ -229,5 +229,3 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
     }
 }
-//endregion
-//</editor-fold>
