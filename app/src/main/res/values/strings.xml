@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">AvationWeather</string>
-    <string name="settingsDefaultICAO">kbab</string>
+
+    <string name="settings_DefaultICAO">kbab</string>
     <string name="Current_ICAO">Current ICAO</string>
-    <string name="settingsDefaultICAO_key">ICAO_key</string>
+    <string name="settings_ICAO_key">ICAO_key</string>
 </resources>

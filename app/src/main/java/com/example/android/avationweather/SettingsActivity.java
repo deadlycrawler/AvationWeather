@@ -17,15 +17,16 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.settings_activity);
     }
 
-    public static class avationweatherPreferanceFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
+    public static class avationweatherPreferanceFragment extends PreferenceFragment
+            implements Preference.OnPreferenceChangeListener {
 
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
+
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_main);
-
-            Preference ICAO = findPreference(getString(R.string.settingsDefaultICAO_key));
+            Preference ICAO = findPreference(getString(R.string.settings_ICAO_key));
             bindPreferenceSummaryToValue(ICAO);
 
 

@@ -2,9 +2,9 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditTextPreference
-        android:defaultValue="@string/settingsDefaultICAO"
+        android:defaultValue="@string/settings_DefaultICAO"
         android:inputType="text"
-        android:key="@string/settingsDefaultICAO_key"
+        android:key="@string/settings_ICAO_key"
         android:selectAllOnFocus="true"
         android:title="@string/Current_ICAO" />
 

@@ -6,17 +6,17 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,71 +29,57 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
-public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+
+public class MainActivity extends AppCompatActivity /*implements SharedPreferences.OnSharedPreferenceChangeListener*/ {
 
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
-//    private String testJSON = "{\n" +
-//            "  \"Altimeter\": \"3000\", \n" +
-//            "  \"Cloud-List\": [\n" +
-//            "    [\n" +
-//            "      \"OVC\", \n" +
-//            "      \"130\"\n" +
-//            "    ]\n" +
-//            "  ], \n" +
-//            "  \"Dewpoint\": \"18\", \n" +
-//            "  \"Flight-Rules\": \"VFR\", \n" +
-//            "  \"Other-List\": [], \n" +
-//            "  \"Raw-Report\": \"KCVS 161158Z AUTO 27004KT 10SM OVC130 18/18 A3000 RMK AO2 SLP098 T01790179 10199 20173 53010 $\", \n" +
-//            "  \"Remarks\": \"RMK AO2 SLP098 T01790179 10199 20173 53010 $\", \n" +
-//            "  \"Remarks-Info\": {\n" +
-//            "    \"Dew-Decimal\": \"17.9\", \n" +
-//            "    \"Temp-Decimal\": \"17.9\"\n" +
-//            "  }, \n" +
-//            "  \"Runway-Vis-List\": [], \n" +
-//            "  \"Station\": \"KCVS\", \n" +
-//            "  \"Temperature\": \"18\", \n" +
-//            "  \"Time\": \"161158Z\", \n" +
-//            "  \"Units\": {\n" +
-//            "    \"Altimeter\": \"inHg\", \n" +
-//            "    \"Altitude\": \"ft\", \n" +
-//            "    \"Temperature\": \"C\", \n" +
-//            "    \"Visibility\": \"sm\", \n" +
-//            "    \"Wind-Speed\": \"kt\"\n" +
-//            "  }, \n" +
-//            "  \"Visibility\": \"10\", \n" +
-//            "  \"Wind-Direction\": \"270\", \n" +
-//            "  \"Wind-Gust\": \"\", \n" +
-//            "  \"Wind-Speed\": \"04\", \n" +
-//            "  \"Wind-Variable-Dir\": []\n" +
-//            "}";
 
-    private static String mIcaoString = "kcvs";
-    private static String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/" + mIcaoString;
+    Button button;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        avationAsyncTask task = new avationAsyncTask();
-        task.execute();
+         button = (Button)findViewById(R.id.button);
+
+        button.setOnClickListener(new View.OnClickListener(){
+
+
+            @Override
+            public void onClick(View v) {
+                Start();
+            }
+        });
+
+
+        // Obtain a reference to the SharedPreferences file for this app
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        // And register to be notified of preference changes
+        // So we know when the user has adjusted the query settings
+       // prefs.registerOnSharedPreferenceChangeListener(this);
+
 
     }
 
 
-    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        if (key.equals(getString(R.string.settingsDefaultICAO_key))) {
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-            String ICAO= sharedPreferences.getString(getString(R.string.settingsDefaultICAO_key), getString(R.string.settingsDefaultICAO));
-
-            this.mIcaoString=ICAO;
-            System.out.println(ICAO);
-            avationAsyncTask task = new avationAsyncTask();
-            task.execute();
-        }
-    }
+//    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+//        if (key.equals(getString(R.string.settings_ICAO_key))) {
+//           // SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+//
+//            String ICAO= key.toString();
+//
+//
+//
+//
+//            avationAsyncTask task = new avationAsyncTask();
+//            task.execute();
+//
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -113,6 +99,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     }
 
     private class avationAsyncTask extends AsyncTask<URL, Void, Weather> {
+
+        String AVWX_REQUEST_URL="";
+
+        private avationAsyncTask(String AVWX_REQUEST_URL_fromAbove){AVWX_REQUEST_URL=AVWX_REQUEST_URL_fromAbove;}
 
 
         @Override
@@ -216,4 +206,28 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             metar.setText(weather.getMetar());
         }
     }
+
+    public void Start(){
+
+        EditText userEnterdIcao = (EditText)findViewById(R.id.putICAOhere);
+        String ICAO= userEnterdIcao.getText().toString();
+
+
+        String mIcaoString = "kbab";
+        mIcaoString=ICAO;
+        String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/" + mIcaoString;
+
+
+
+        Context contrxt=MainActivity.this;
+
+        Toast.makeText(contrxt,"Fetching Metar",Toast.LENGTH_LONG);
+
+        avationAsyncTask task = new avationAsyncTask(AVWX_REQUEST_URL);
+        task.execute();
+
+
+    }
 }
+//endregion
+//</editor-fold>
