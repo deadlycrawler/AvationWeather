@@ -26,12 +26,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity /*implements SharedPreferences.OnSharedPreferenceChangeListener*/ {
 
 //TODO: handle more possible netWork errors, what happens when theres no internet or an invalid ICAO is entered
-
 
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
         setContentView(R.layout.activity_main);
 
         FetchMetar = (Button) findViewById(R.id.fetchMetar);
-        DetailViewButton = (Button)findViewById(R.id.metarDetails);
+        DetailViewButton = (Button) findViewById(R.id.metarDetails);
 
 
         FetchMetar.setOnClickListener(new View.OnClickListener() {
@@ -66,18 +66,18 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
             @Override
             public void onClick(View v) {
-                if(fetched==true) {
+                if (fetched == true) {
 
                     DetailedMetarActivity activty = new DetailedMetarActivity();
                     Intent i = new Intent(MainActivity.this, activty.getClass());
-                    i.putExtra("weatherObject",mWeather);
+                    i.putExtra("weatherObject", mWeather);
 
                     startActivity(i);
 
 
-                }else{
+                } else {
 
-                    Toast.makeText(MainActivity.this,"you want me to show you details of nothing?",Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "you want me to show you details of nothing?", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -255,24 +255,48 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
             try {
 
 
-
                 JSONObject baseJsonResponse = new JSONObject(weatherJSON);
 
-                //todo:user JSONArray and the .lenth() to loop through total cloud layers
+                JSONArray cloudArray = baseJsonResponse.getJSONArray("Cloud-List");
+
+                ArrayList<CloudDetails> CloudDetailsArrayList = new ArrayList<>();
+
+                if (cloudArray.length() == 0) {
+                    CloudDetails cloudDetailsClass = new CloudDetails("Clear skies", "every level");
+                    CloudDetailsArrayList.add(cloudDetailsClass);
+                } else {
+
+
+                    for (int i = 0; i < cloudArray.length(); i++) {
+
+
+                        JSONArray cloudDetails = cloudArray.getJSONArray(i);
+//                    JSONObject cloudDensity = cloudDetails.getJSONObject(0);
+//                    JSONObject cloudAltitude = cloudDetails.getJSONObject(1);
+
+                        String cloudDensityString = cloudDetails.getString(0);
+                        String cloudAltitudeString = cloudDetails.getString(1);
+
+                        CloudDetails cloudDetailsClass = new CloudDetails(cloudDensityString, cloudAltitudeString);
+
+                        CloudDetailsArrayList.add(cloudDetailsClass);
+
+                    }
+                }
+
+
                 String metar = baseJsonResponse.getString("Raw-Report");
 
-                String mAltimiter= baseJsonResponse.getString("Altimeter");
-                String mtemperture= baseJsonResponse.getString("Temperature");
-                String mtime= baseJsonResponse.getString("Time");
-                String mwindDirecton= baseJsonResponse.getString("Wind-Direction");
-                String mwindSpeed= baseJsonResponse.getString("Wind-Speed");
+
+                String mAltimiter = baseJsonResponse.getString("Altimeter");
+                String mtemperture = baseJsonResponse.getString("Temperature");
+                String mtime = baseJsonResponse.getString("Time");
+                String mwindDirecton = baseJsonResponse.getString("Wind-Direction");
+                String mwindSpeed = baseJsonResponse.getString("Wind-Speed");
 
 
                 // Create a new {@link Event} object
-                return new Weather(metar,mAltimiter,mtemperture,mtime,mwindDirecton,mwindSpeed);
-
-
-
+                return new Weather(metar, mAltimiter, mtemperture, mtime, mwindDirecton, mwindSpeed, CloudDetailsArrayList);
 
 
             } catch (JSONException e) {
@@ -285,8 +309,8 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
             TextView metar = (TextView) findViewById(R.id.putMetarHere);
             metar.setText(weather.getMetar());
-            fetched=true;
-            mWeather=weather;
+            fetched = true;
+            mWeather = weather;
         }
     }
 

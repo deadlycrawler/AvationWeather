@@ -2,6 +2,7 @@ package com.example.android.avationweather;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Weather implements Serializable{
 
@@ -13,7 +14,11 @@ public class Weather implements Serializable{
     String mwindDirecton;
     String mwindSpeed;
 
-    public Weather(String metar,String Altimiter,String temperture,String time,String windDirecton,String windSpeed) {
+    ArrayList<CloudDetails> mClouds;
+
+
+
+    public Weather(String metar, String Altimiter, String temperture, String time, String windDirecton, String windSpeed, ArrayList<CloudDetails> cloudsArrayList) {
 
         mAltimiter=Altimiter;
         mtemperture=temperture;
@@ -21,6 +26,8 @@ public class Weather implements Serializable{
         mwindDirecton=windDirecton;
         mwindSpeed=windSpeed;
         this.metar=metar;
+
+        mClouds=cloudsArrayList;
 
     }
     public String getMetar() {
@@ -45,5 +52,9 @@ public class Weather implements Serializable{
 
     public String getMwindSpeed() {
         return mwindSpeed;
+    }
+
+    public ArrayList<CloudDetails> getmClouds() {
+        return mClouds;
     }
 }
