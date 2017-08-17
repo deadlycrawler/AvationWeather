@@ -33,7 +33,7 @@ import java.nio.charset.Charset;
 
 public class MainActivity extends AppCompatActivity /*implements SharedPreferences.OnSharedPreferenceChangeListener*/ {
 
-
+//TODO: handle more possible netWork errors, what happens when theres no internet or an invalid ICAO is entered
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     Button button;
