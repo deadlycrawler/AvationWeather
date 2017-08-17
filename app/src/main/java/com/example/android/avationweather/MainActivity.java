@@ -34,6 +34,7 @@ import java.nio.charset.Charset;
 public class MainActivity extends AppCompatActivity /*implements SharedPreferences.OnSharedPreferenceChangeListener*/ {
 
 //TODO: handle more possible netWork errors, what happens when theres no internet or an invalid ICAO is entered
+    //TODO: enable simplified to make the metar human readable
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     Button button;
@@ -231,7 +232,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
             mIcaoString="k"+ICAO;
             String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/" + mIcaoString;
             Context contrxt=MainActivity.this;
-            Toast.makeText(getApplicationContext(),"fetthing"+mIcaoString,Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(),"fetthing "+mIcaoString,Toast.LENGTH_LONG).show();
             avationAsyncTask task = new avationAsyncTask(AVWX_REQUEST_URL);
             task.execute();
         }else if(ICAO.length()>4){
