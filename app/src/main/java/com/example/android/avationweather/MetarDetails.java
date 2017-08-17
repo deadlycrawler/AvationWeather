@@ -1,30 +1,24 @@
 package com.example.android.avationweather;
 
+//this class holds metar data
 
-import java.io.Serializable;
+public class MetarDetails {
+    //TODO: add gust factor to constructor
 
-public class Weather implements Serializable{
-
-
-    private String metar;
     String mAltimiter;
     String mtemperture;
     String mtime;
     String mwindDirecton;
     String mwindSpeed;
 
-    public Weather(String metar,String Altimiter,String temperture,String time,String windDirecton,String windSpeed) {
+    public MetarDetails(String Altimiter,String temperture,String time,String windDirecton,String windSpeed) {
 
-        mAltimiter=Altimiter;
-        mtemperture=temperture;
-        mtime=time;
-        mwindDirecton=windDirecton;
-        mwindSpeed=windSpeed;
-        this.metar=metar;
+         mAltimiter=Altimiter;
+         mtemperture=temperture;
+         mtime=time;
+         mwindDirecton=windDirecton;
+         mwindSpeed=windSpeed;
 
-    }
-    public String getMetar() {
-        return metar;
     }
 
     public String getmAltimiter() {

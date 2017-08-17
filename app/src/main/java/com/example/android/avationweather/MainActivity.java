@@ -2,10 +2,7 @@ package com.example.android.avationweather;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,14 +28,19 @@ import java.net.URL;
 import java.nio.charset.Charset;
 
 
-
 public class MainActivity extends AppCompatActivity /*implements SharedPreferences.OnSharedPreferenceChangeListener*/ {
 
 //TODO: handle more possible netWork errors, what happens when theres no internet or an invalid ICAO is entered
-    //TODO: enable simplified to make the metar human readable
+
+
+
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    Button button;
+    Button FetchMetar;
+    Button DetailViewButton;
+    boolean fetched = false;
+
+    Weather mWeather;
 
 
     @Override
@@ -45,9 +48,11 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-         button = (Button)findViewById(R.id.button);
+        FetchMetar = (Button) findViewById(R.id.fetchMetar);
+        DetailViewButton = (Button)findViewById(R.id.metarDetails);
 
-        button.setOnClickListener(new View.OnClickListener(){
+
+        FetchMetar.setOnClickListener(new View.OnClickListener() {
 
 
             @Override
@@ -56,12 +61,33 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
             }
         });
 
+        DetailViewButton.setOnClickListener(new View.OnClickListener() {
+
+
+            @Override
+            public void onClick(View v) {
+                if(fetched==true) {
+
+                    DetailedMetarActivity activty = new DetailedMetarActivity();
+                    Intent i = new Intent(MainActivity.this, activty.getClass());
+                    i.putExtra("weatherObject",mWeather);
+
+                    startActivity(i);
+
+
+                }else{
+
+                    Toast.makeText(MainActivity.this,"you want me to show you details of nothing?",Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
 
         // Obtain a reference to the SharedPreferences file for this app
 //        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         // And register to be notified of preference changes
         // So we know when the user has adjusted the query settings
-       // prefs.registerOnSharedPreferenceChangeListener(this);
+        // prefs.registerOnSharedPreferenceChangeListener(this);
 
 
     }
@@ -99,11 +125,48 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
         return super.onOptionsItemSelected(item);
     }
 
+    public void Start() {
+
+        EditText userEnterdIcao = (EditText) findViewById(R.id.putICAOhere);
+        String ICAO = userEnterdIcao.getText().toString();
+
+
+        if (ICAO.length() == 4) {
+
+
+            String mIcaoString = "kbab";
+            mIcaoString = ICAO;
+            String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/" + mIcaoString;
+            Context contrxt = MainActivity.this;
+            Toast.makeText(getApplicationContext(), "Fetching " + mIcaoString, Toast.LENGTH_LONG).show();
+            avationAsyncTask task = new avationAsyncTask(AVWX_REQUEST_URL);
+            task.execute();
+
+        } else if (ICAO.length() == 3) {
+            String mIcaoString = "kbab";
+            mIcaoString = "k" + ICAO;
+            String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/" + mIcaoString;
+            Context contrxt = MainActivity.this;
+            Toast.makeText(getApplicationContext(), "fetthing " + mIcaoString, Toast.LENGTH_LONG).show();
+            avationAsyncTask task = new avationAsyncTask(AVWX_REQUEST_URL);
+            task.execute();
+        } else if (ICAO.length() > 4) {
+
+            Context contrxt = MainActivity.this;
+            Toast.makeText(contrxt, "check length of ICAO", Toast.LENGTH_LONG).show();
+            Log.d(MainActivity.LOG_TAG, "else running wihtout toast");
+        }
+
+
+    }
+
     private class avationAsyncTask extends AsyncTask<URL, Void, Weather> {
 
-        String AVWX_REQUEST_URL="";
+        String AVWX_REQUEST_URL = "";
 
-        private avationAsyncTask(String AVWX_REQUEST_URL_fromAbove){AVWX_REQUEST_URL=AVWX_REQUEST_URL_fromAbove;}
+        private avationAsyncTask(String AVWX_REQUEST_URL_fromAbove) {
+            AVWX_REQUEST_URL = AVWX_REQUEST_URL_fromAbove;
+        }
 
 
         @Override
@@ -190,10 +253,27 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
         private Weather extractFeatureFromJson(String weatherJSON) {
 
             try {
+
+
+
                 JSONObject baseJsonResponse = new JSONObject(weatherJSON);
+
+                //todo:user JSONArray and the .lenth() to loop through total cloud layers
                 String metar = baseJsonResponse.getString("Raw-Report");
+
+                String mAltimiter= baseJsonResponse.getString("Altimeter");
+                String mtemperture= baseJsonResponse.getString("Temperature");
+                String mtime= baseJsonResponse.getString("Time");
+                String mwindDirecton= baseJsonResponse.getString("Wind-Direction");
+                String mwindSpeed= baseJsonResponse.getString("Wind-Speed");
+
+
                 // Create a new {@link Event} object
-                return new Weather(metar);
+                return new Weather(metar,mAltimiter,mtemperture,mtime,mwindDirecton,mwindSpeed);
+
+
+
+
 
             } catch (JSONException e) {
                 Log.e(LOG_TAG, "Problem parsing the earthquake JSON results", e);
@@ -205,44 +285,9 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
             TextView metar = (TextView) findViewById(R.id.putMetarHere);
             metar.setText(weather.getMetar());
+            fetched=true;
+            mWeather=weather;
         }
-    }
-
-    public void Start(){
-
-        EditText userEnterdIcao = (EditText)findViewById(R.id.putICAOhere);
-        String ICAO= userEnterdIcao.getText().toString();
-
-
-
-
-        if(ICAO.length()==4){
-
-
-        String mIcaoString = "kbab";
-        mIcaoString=ICAO;
-        String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/" + mIcaoString;
-        Context contrxt=MainActivity.this;
-        Toast.makeText(getApplicationContext(),"Fetching "+mIcaoString,Toast.LENGTH_LONG).show();
-        avationAsyncTask task = new avationAsyncTask(AVWX_REQUEST_URL);
-        task.execute();
-
-        }else if(ICAO.length()==3){
-            String mIcaoString = "kbab";
-            mIcaoString="k"+ICAO;
-            String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/" + mIcaoString;
-            Context contrxt=MainActivity.this;
-            Toast.makeText(getApplicationContext(),"fetthing "+mIcaoString,Toast.LENGTH_LONG).show();
-            avationAsyncTask task = new avationAsyncTask(AVWX_REQUEST_URL);
-            task.execute();
-        }else if(ICAO.length()>4){
-
-            Context contrxt = MainActivity.this;
-            Toast.makeText(contrxt,"check length of ICAO",Toast.LENGTH_LONG).show();
-            Log.d(MainActivity.LOG_TAG,"else running wihtout toast");
-        }
-
-
     }
 
 
