@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
                 jsonResponse = readFromStream(inputStream);
             } catch (IOException e) {
                 Context context = MainActivity.this;
-                Toast.makeText(context, "fail on HTTPRequest", Toast.LENGTH_LONG);
+                Toast.makeText(context, "fail on HTTPRequest", Toast.LENGTH_LONG).show();
             } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
@@ -213,19 +213,36 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
         String ICAO= userEnterdIcao.getText().toString();
 
 
+
+
+        if(ICAO.length()==4){
+
+
         String mIcaoString = "kbab";
         mIcaoString=ICAO;
         String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/" + mIcaoString;
-
-
-
         Context contrxt=MainActivity.this;
-
-        Toast.makeText(contrxt,"Fetching Metar",Toast.LENGTH_LONG);
-
+        Toast.makeText(getApplicationContext(),"Fetching "+mIcaoString,Toast.LENGTH_LONG).show();
         avationAsyncTask task = new avationAsyncTask(AVWX_REQUEST_URL);
         task.execute();
 
+        }else if(ICAO.length()==3){
+            String mIcaoString = "kbab";
+            mIcaoString="k"+ICAO;
+            String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/" + mIcaoString;
+            Context contrxt=MainActivity.this;
+            Toast.makeText(getApplicationContext(),"fetthing"+mIcaoString,Toast.LENGTH_LONG).show();
+            avationAsyncTask task = new avationAsyncTask(AVWX_REQUEST_URL);
+            task.execute();
+        }else if(ICAO.length()>4){
+
+            Context contrxt = MainActivity.this;
+            Toast.makeText(contrxt,"check length of ICAO",Toast.LENGTH_LONG).show();
+            Log.d(MainActivity.LOG_TAG,"else running wihtout toast");
+        }
+
 
     }
+
+
 }
