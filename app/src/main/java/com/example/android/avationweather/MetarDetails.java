@@ -3,7 +3,6 @@ package com.example.android.avationweather;
 //this class holds metar data
 
 public class MetarDetails {
-    //TODO: add gust factor to constructor
 
     String mAltimiter;
     String mtemperture;
