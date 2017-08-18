@@ -263,8 +263,9 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
             }
             return output.toString();
         }
-
+//TODO: add a way to prevent crashing when the response isn't correct
         private Weather extractFeatureFromJson(String weatherJSON) {
+
 
             try {
                 JSONObject baseJsonResponse = new JSONObject(weatherJSON);
@@ -301,8 +302,19 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
 
             } catch (JSONException e) {
-                Log.e(LOG_TAG, "Problem parsing the earthquake JSON results", e);
+
+                try {
+                    JSONObject baseJsonResponse = new JSONObject(weatherJSON);
+                    String Error=  baseJsonResponse.getString("Error");
+                    Context context = MainActivity.this;
+                    Toast.makeText(context,Error,Toast.LENGTH_LONG).show();
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
+
             }
+
+
             return null;
         }
 
