@@ -31,13 +31,16 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity /*implements SharedPreferences.OnSharedPreferenceChangeListener*/ {
 
-//TODO: handle more possible netWork errors, what happens when theres no internet or an invalid ICAO is entered
+    //TODO: handle more possible netWork errors, what happens when there's no internet or an invalid ICAO is entered
+    //TODO: handle response when a non existent airport was selected
 
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     Button FetchMetar;
     Button DetailViewButton;
+    EditText userEnterdIcao;
+
     boolean fetched = false;
 
     Weather mWeather;
@@ -50,7 +53,18 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
         FetchMetar = (Button) findViewById(R.id.fetchMetar);
         DetailViewButton = (Button) findViewById(R.id.metarDetails);
+        userEnterdIcao = (EditText) findViewById(R.id.putICAOhere);
+//        userEnterdIcao.setSelectAllOnFocus(true);
 
+
+        //selects all text inside of the edit text when clicked on
+//        userEnterdIcao.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                userEnterdIcao.selectAll();
+//
+//            }
+//        });
 
         FetchMetar.setOnClickListener(new View.OnClickListener() {
 
@@ -127,7 +141,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
     public void Start() {
 
-        EditText userEnterdIcao = (EditText) findViewById(R.id.putICAOhere);
+
         String ICAO = userEnterdIcao.getText().toString();
 
 
@@ -253,39 +267,26 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
         private Weather extractFeatureFromJson(String weatherJSON) {
 
             try {
-
-
                 JSONObject baseJsonResponse = new JSONObject(weatherJSON);
-
                 JSONArray cloudArray = baseJsonResponse.getJSONArray("Cloud-List");
-
                 ArrayList<CloudDetails> CloudDetailsArrayList = new ArrayList<>();
 
                 if (cloudArray.length() == 0) {
                     CloudDetails cloudDetailsClass = new CloudDetails("Clear skies", "every level");
                     CloudDetailsArrayList.add(cloudDetailsClass);
                 } else {
-
-
                     for (int i = 0; i < cloudArray.length(); i++) {
 
                         JSONArray cloudDetails = cloudArray.getJSONArray(i);
-//                    JSONObject cloudDensity = cloudDetails.getJSONObject(0);
-//                    JSONObject cloudAltitude = cloudDetails.getJSONObject(1);
-
                         String cloudDensityString = cloudDetails.getString(0);
                         String cloudAltitudeString = cloudDetails.getString(1);
-
                         CloudDetails cloudDetailsClass = new CloudDetails(cloudDensityString, cloudAltitudeString);
-
                         CloudDetailsArrayList.add(cloudDetailsClass);
-
                     }
                 }
 
 
                 String metar = baseJsonResponse.getString("Raw-Report");
-
 
                 String mAltimiter = baseJsonResponse.getString("Altimeter");
                 String mtemperture = baseJsonResponse.getString("Temperature");
@@ -296,7 +297,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
 
                 // Create a new {@link Event} object
-                return new Weather(metar, mAltimiter, mtemperture, mtime, mwindDirecton, mwindSpeed, gustFactor,CloudDetailsArrayList);
+                return new Weather(metar, mAltimiter, mtemperture, mtime, mwindDirecton, mwindSpeed, gustFactor, CloudDetailsArrayList);
 
 
             } catch (JSONException e) {
