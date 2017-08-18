@@ -27,28 +27,38 @@ public class DetailedMetarActivity extends AppCompatActivity {
         mWeather = (Weather) getIntent().getSerializableExtra("weatherObject");
 
         String time = mWeather.getMtime();
-        StringBuilder sb=new StringBuilder(time);
+        StringBuilder sb = new StringBuilder(time);
 
-        sb.deleteCharAt(sb.length()-1);sb.deleteCharAt(sb.length()-1);sb.deleteCharAt(sb.length()-1);
+        sb.deleteCharAt(sb.length() - 1);
+        sb.deleteCharAt(sb.length() - 1);
+        sb.deleteCharAt(sb.length() - 1);
 
 
-
-        time = sb.toString()+" Zulu";
+        time = sb.toString() + " Zulu";
 
 
         String VerbosePart1 =
-                "time: "+ time+"\n"+
-                "Wind direction: " + mWeather.getMwindDirecton() + "\n" +
-                "Wind Speed: " + mWeather.getMwindSpeed() + "\n" +
+                "time: " + time + "\n" +
+                        "Wind direction: " + mWeather.getMwindDirecton() + "\n" +
+                        "Wind Speed: " + mWeather.getMwindSpeed() + "\n";
+
+        String VerbosePart2 = "\n";
+
+
+        try {
+            int gust = Integer.parseInt(mWeather.getGustFactor());
+            VerbosePart2 = "Gusting up to: " + gust + "\n"+"\n";
+        } catch (NumberFormatException e) {
+
+        }
+
+
+        String VerbosePart3 =
                 "Tempature: " + mWeather.getMtemperture() + "\n" +
-                "Altimiter setting: " + mWeather.getmAltimiter() + "\n\n";
+                        "Altimiter setting: " + mWeather.getmAltimiter() + "\n\n";
 
 
-
-
-
-
-        String VerboseDisplay = VerbosePart1 + "clouds: ";
+        String VerboseDisplay = VerbosePart1 + VerbosePart2 + VerbosePart3 + "clouds: ";
 
         int arraySize = mWeather.getmClouds().size();
         for (int i = 0; i < arraySize; i++) {

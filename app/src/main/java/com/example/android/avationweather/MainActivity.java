@@ -269,7 +269,6 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
                     for (int i = 0; i < cloudArray.length(); i++) {
 
-
                         JSONArray cloudDetails = cloudArray.getJSONArray(i);
 //                    JSONObject cloudDensity = cloudDetails.getJSONObject(0);
 //                    JSONObject cloudAltitude = cloudDetails.getJSONObject(1);
@@ -293,10 +292,11 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
                 String mtime = baseJsonResponse.getString("Time");
                 String mwindDirecton = baseJsonResponse.getString("Wind-Direction");
                 String mwindSpeed = baseJsonResponse.getString("Wind-Speed");
+                String gustFactor = baseJsonResponse.getString("Wind-Gust");
 
 
                 // Create a new {@link Event} object
-                return new Weather(metar, mAltimiter, mtemperture, mtime, mwindDirecton, mwindSpeed, CloudDetailsArrayList);
+                return new Weather(metar, mAltimiter, mtemperture, mtime, mwindDirecton, mwindSpeed, gustFactor,CloudDetailsArrayList);
 
 
             } catch (JSONException e) {

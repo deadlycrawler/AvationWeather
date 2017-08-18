@@ -4,32 +4,32 @@ package com.example.android.avationweather;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Weather implements Serializable{
+public class Weather implements Serializable {
 
 
-    private String metar;
     String mAltimiter;
     String mtemperture;
     String mtime;
     String mwindDirecton;
     String mwindSpeed;
-
+    String gustFactor;
     ArrayList<CloudDetails> mClouds;
+    private String metar;
 
 
+    public Weather(String metar, String Altimiter, String temperture, String time, String windDirecton, String windSpeed, String gustFactor, ArrayList<CloudDetails> cloudsArrayList) {
 
-    public Weather(String metar, String Altimiter, String temperture, String time, String windDirecton, String windSpeed, ArrayList<CloudDetails> cloudsArrayList) {
-
-        mAltimiter=Altimiter;
-        mtemperture=temperture;
-        mtime=time;
-        mwindDirecton=windDirecton;
-        mwindSpeed=windSpeed;
-        this.metar=metar;
-
-        mClouds=cloudsArrayList;
+        mAltimiter = Altimiter;
+        mtemperture = temperture;
+        mtime = time;
+        mwindDirecton = windDirecton;
+        mwindSpeed = windSpeed;
+        this.metar = metar;
+        this.gustFactor = gustFactor;
+        mClouds = cloudsArrayList;
 
     }
+
     public String getMetar() {
         return metar;
     }
@@ -56,5 +56,9 @@ public class Weather implements Serializable{
 
     public ArrayList<CloudDetails> getmClouds() {
         return mClouds;
+    }
+
+    public String getGustFactor() {
+        return gustFactor;
     }
 }
