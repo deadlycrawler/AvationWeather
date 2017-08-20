@@ -8,13 +8,17 @@ public class WeatherScales implements Serializable {
 
     String altimeterScale;
     String AltitudeScale;
-    String TempScale="bacons";
+    String TempScale;
     String VisiblityScale;
     String WindSpeedScale;
 
 
     public WeatherScales(String altimeterScale, String AltitudeScale, String TempScale, String VisiblityScale, String WindSpeedScale) {
-
+        this.altimeterScale=altimeterScale;
+        this.AltitudeScale=AltitudeScale;
+        this.TempScale=TempScale;
+        this.VisiblityScale=VisiblityScale;
+        this.WindSpeedScale=WindSpeedScale;
 
     }
 

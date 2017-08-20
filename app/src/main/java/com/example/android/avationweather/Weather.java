@@ -4,17 +4,17 @@ package com.example.android.avationweather;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Weather implements Serializable {
+class Weather implements Serializable {
 
 
-    ArrayList<CloudDetails> mClouds;
-    WeatherValues weatherValues;
-    WeatherScales weatherScale;
+    private ArrayList<CloudDetails> mClouds;
+    private WeatherValues weatherValues;
+    private WeatherScales weatherScale;
 
     private String metar;
 
 
-    public Weather(String metar, ArrayList<CloudDetails> cloudsArrayList, WeatherValues weatherValues, WeatherScales weatherScale) {
+    Weather(String metar, ArrayList<CloudDetails> cloudsArrayList, WeatherValues weatherValues, WeatherScales weatherScale) {
 
         this.metar = metar;
         this.weatherScale = weatherScale;
