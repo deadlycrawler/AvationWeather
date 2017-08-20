@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
     EditText userEnterdIcao;
 
     boolean fetched = false;
+    boolean resuming =false;
 
     Weather mWeather;
 
@@ -59,17 +60,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
         FetchMetar = (Button) findViewById(R.id.fetchMetar);
         DetailViewButton = (Button) findViewById(R.id.metarDetails);
         userEnterdIcao = (EditText) findViewById(R.id.putICAOhere);
-//        userEnterdIcao.setSelectAllOnFocus(true);
 
-
-        //selects all text inside of the edit text when clicked on
-//        userEnterdIcao.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                userEnterdIcao.selectAll();
-//
-//            }
-//        });
 
         FetchMetar.setOnClickListener(new View.OnClickListener() {
 
@@ -109,6 +100,13 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
         // prefs.registerOnSharedPreferenceChangeListener(this);
 
 
+    }
+    //retrieves a fresh metar on resume of activity
+    @Override
+    public void onResume(){
+        super.onResume();
+        resuming=true;
+        Start();
     }
 
 
@@ -164,6 +162,9 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
         String ICAO = userEnterdIcao.getText().toString();
 
+        String fetching = "Fetching ";
+        if(resuming)fetching="Updating ";
+
         if (isConnectedToInternet()) {
             if (ICAO.length() == 4) {
 
@@ -171,7 +172,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
                 String mIcaoString;
                 mIcaoString = ICAO;
                 String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/" + mIcaoString;
-                Toast.makeText(getApplicationContext(), "Fetching " + mIcaoString, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), fetching + mIcaoString, Toast.LENGTH_LONG).show();
                 avationAsyncTask task = new avationAsyncTask(AVWX_REQUEST_URL);
                 task.execute();
 
@@ -180,7 +181,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
                 mIcaoString = "k" + ICAO;
                 String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/" + mIcaoString;
 
-                Toast.makeText(getApplicationContext(), "fetthing " + mIcaoString, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), fetching + mIcaoString, Toast.LENGTH_LONG).show();
                 avationAsyncTask task = new avationAsyncTask(AVWX_REQUEST_URL);
 
 
