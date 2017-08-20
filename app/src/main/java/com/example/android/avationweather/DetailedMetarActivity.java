@@ -5,18 +5,19 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-
+//todo: Test this class
 public class DetailedMetarActivity extends AppCompatActivity {
 
-    Weather mWeather;
+    Weather weather;
     TextView metarDetails;
+    WeatherValues weatherValues;
+    WeatherScales weatherScales;
 
 
     public DetailedMetarActivity() {
     }
 
 
-    //TODO: ADD SCALES TO VARIOUS DISPLAYED TEXT EXTRACING FROM json TO ACCOUNT FOR FOREIGN MESUREMENT SYSTEMS
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,9 +25,10 @@ public class DetailedMetarActivity extends AppCompatActivity {
 
         metarDetails = (TextView) findViewById(R.id.metarDetails);
 
-        mWeather = (Weather) getIntent().getSerializableExtra("weatherObject");
+        weather = (Weather) getIntent().getSerializableExtra("weatherObject");
+        weatherValues = weather.getWeatherValues();
 
-        String time = mWeather.getMtime();
+        String time = weatherValues.getMtime();
         StringBuilder sb = new StringBuilder(time);
 
         sb.deleteCharAt(sb.length() - 1);
@@ -37,33 +39,43 @@ public class DetailedMetarActivity extends AppCompatActivity {
         time = sb.toString() + " Zulu";
 
 
+        weatherScales=weather.getWeatherScale();
+
+        String windSpeedScale = weatherScales.getWindSpeedScale();
+        String TempScale = weatherScales.getTempScale();
+        String AltScale = weatherScales.getAltitudeScale();
+        String windDirectionScale = "°";//this is just a degree character, JSON responce doesnt have any specified sclae so i added in my own
+        String visibilityScale = weatherScales.getVisiblityScale();
+
+
         String VerbosePart1 =
                 "time: " + time + "\n" +
-                        "Wind direction: " + mWeather.getMwindDirecton() + "\n" +
-                        "Wind Speed: " + mWeather.getMwindSpeed() + "\n";
+                        "Wind direction: " + weatherValues.getMwindDirecton() + windDirectionScale + "\n" +
+                        "Wind Speed: " + weatherValues.getMwindSpeed() + " " + windSpeedScale + "\n";
 
         String VerbosePart2 = "\n";
 
 
         try {
-            int gust = Integer.parseInt(mWeather.getGustFactor());
-            VerbosePart2 = "Gusting up to: " + gust + "\n"+"\n";
+            int gust = Integer.parseInt(weatherValues.getGustFactor());
+            VerbosePart2 = "Gusting up to: " + gust + "\n" + "\n";
         } catch (NumberFormatException e) {
 
         }
 
 
         String VerbosePart3 =
-                "Tempature: " + mWeather.getMtemperture() + "\n" +
-                        "Altimiter setting: " + mWeather.getmAltimiter() + "\n\n";
+                "Visiblity: " + weatherValues.getVisibility() + " " + visibilityScale + "\n" +
+                        "Tempature: " + weatherValues.getMtemperture() + " " + TempScale + "\n" +
+                        "Altimiter setting: " + weatherValues.getmAltimiter() + " " + AltScale + "\n\n";
 
 
         String VerboseDisplay = VerbosePart1 + VerbosePart2 + VerbosePart3 + "clouds: ";
 
-        int arraySize = mWeather.getmClouds().size();
+        int arraySize = weather.getmClouds().size();
         for (int i = 0; i < arraySize; i++) {
 
-            ArrayList<CloudDetails> cloudDetailsArrayList = mWeather.getmClouds();
+            ArrayList<CloudDetails> cloudDetailsArrayList = weather.getmClouds();
             String density = cloudDetailsArrayList.get(i).getDensity();
             String altitude = cloudDetailsArrayList.get(i).getAltitude();
 

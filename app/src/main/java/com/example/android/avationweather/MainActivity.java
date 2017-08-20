@@ -2,6 +2,8 @@ package com.example.android.avationweather;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,9 +33,12 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity /*implements SharedPreferences.OnSharedPreferenceChangeListener*/ {
 
-    //TODO: handle more possible netWork errors, what happens when there's no internet or an invalid ICAO is entered
+    //TODO: handle more possible netWork errors, what happens when there's no internet but you have a network connection
     //TODO: handle response when a non existent airport was selected
-
+    //TODO: add a splash screen and find an artist to make a good spash screen to replace the crap you're going to put in it
+    //todo: change async task to loader
+    //TODO: fix the settings screen to allow a user to enter a default weather station
+    //TODO: Fix all the strings so that this can be easily translated
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -80,7 +85,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
             @Override
             public void onClick(View v) {
-                if (fetched == true) {
+                if (fetched) {
 
                     DetailedMetarActivity activty = new DetailedMetarActivity();
                     Intent i = new Intent(MainActivity.this, activty.getClass());
@@ -139,42 +144,63 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
         return super.onOptionsItemSelected(item);
     }
 
+    public boolean isConnectedToInternet() {
+        ConnectivityManager connectivity = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null)
+                for (int i = 0; i < info.length; i++)
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                        return true;
+                    }
+
+        }
+        return false;
+    }
+
+    //where it all starts, start is called when you hit the "fetch Metar" button
     public void Start() {
 
 
         String ICAO = userEnterdIcao.getText().toString();
 
+        if (isConnectedToInternet()) {
+            if (ICAO.length() == 4) {
 
-        if (ICAO.length() == 4) {
+
+                String mIcaoString;
+                mIcaoString = ICAO;
+                String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/" + mIcaoString;
+                Toast.makeText(getApplicationContext(), "Fetching " + mIcaoString, Toast.LENGTH_LONG).show();
+                avationAsyncTask task = new avationAsyncTask(AVWX_REQUEST_URL);
+                task.execute();
+
+            } else if (ICAO.length() == 3) {
+                String mIcaoString;
+                mIcaoString = "k" + ICAO;
+                String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/" + mIcaoString;
+
+                Toast.makeText(getApplicationContext(), "fetthing " + mIcaoString, Toast.LENGTH_LONG).show();
+                avationAsyncTask task = new avationAsyncTask(AVWX_REQUEST_URL);
 
 
-            String mIcaoString = "kbab";
-            mIcaoString = ICAO;
-            String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/" + mIcaoString;
-            Context contrxt = MainActivity.this;
-            Toast.makeText(getApplicationContext(), "Fetching " + mIcaoString, Toast.LENGTH_LONG).show();
-            avationAsyncTask task = new avationAsyncTask(AVWX_REQUEST_URL);
-            task.execute();
+                task.execute();
+            } else if (ICAO.length() > 4) {
 
-        } else if (ICAO.length() == 3) {
-            String mIcaoString = "kbab";
-            mIcaoString = "k" + ICAO;
-            String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/" + mIcaoString;
-            Context contrxt = MainActivity.this;
-            Toast.makeText(getApplicationContext(), "fetthing " + mIcaoString, Toast.LENGTH_LONG).show();
-            avationAsyncTask task = new avationAsyncTask(AVWX_REQUEST_URL);
-            task.execute();
-        } else if (ICAO.length() > 4) {
+                Context contrxt = MainActivity.this;
+                Toast.makeText(contrxt, "check length of ICAO", Toast.LENGTH_LONG).show();
+                Log.d(MainActivity.LOG_TAG, "else running wihtout toast");
+            }
+        } else {
+            Toast.makeText(this, "Check Network Connectivity", Toast.LENGTH_LONG).show();
 
-            Context contrxt = MainActivity.this;
-            Toast.makeText(contrxt, "check length of ICAO", Toast.LENGTH_LONG).show();
-            Log.d(MainActivity.LOG_TAG, "else running wihtout toast");
         }
 
 
     }
 
     private class avationAsyncTask extends AsyncTask<URL, Void, Weather> {
+
 
         String AVWX_REQUEST_URL = "";
 
@@ -192,7 +218,8 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
                 jsonResponse = makeHttpRequest(url);
             } catch (IOException e) {
                 Context context = MainActivity.this;
-                Toast.makeText(context, "fail on makeHttpRequest(url)", Toast.LENGTH_LONG);
+                Toast.makeText(context, "fail on makeHttpRequest(url)", Toast.LENGTH_LONG).show();
+                Log.e(LOG_TAG, "Problem retrieving the earthquake JSON results.", e);
             }
 
             Weather weather = extractFeatureFromJson(jsonResponse);
@@ -213,7 +240,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
         private URL createUrl(String stringUrl) {
 
-            URL url = null;
+            URL url;
             try {
                 url = new URL(stringUrl);
             } catch (MalformedURLException exception) {
@@ -227,6 +254,8 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
             String jsonResponse = "";
             HttpURLConnection urlConnection = null;
             InputStream inputStream = null;
+
+
             try {
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
@@ -238,6 +267,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
             } catch (IOException e) {
                 Context context = MainActivity.this;
                 Toast.makeText(context, "fail on HTTPRequest", Toast.LENGTH_LONG).show();
+                Log.e(LOG_TAG, "Problem retrieving the earthquake JSON results.", e);
             } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
@@ -263,12 +293,18 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
             }
             return output.toString();
         }
-//TODO: add a way to prevent crashing when the response isn't correct
+
+        //TODO: add a way to prevent crashing when the response is a non existent station
         private Weather extractFeatureFromJson(String weatherJSON) {
 
 
             try {
                 JSONObject baseJsonResponse = new JSONObject(weatherJSON);
+
+                //TODO: TEST THIS LINE FOR GETTING UNIT SCALES
+                JSONObject unitScales = baseJsonResponse.getJSONObject("Units");
+
+
                 JSONArray cloudArray = baseJsonResponse.getJSONArray("Cloud-List");
                 ArrayList<CloudDetails> CloudDetailsArrayList = new ArrayList<>();
 
@@ -295,19 +331,39 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
                 String mwindDirecton = baseJsonResponse.getString("Wind-Direction");
                 String mwindSpeed = baseJsonResponse.getString("Wind-Speed");
                 String gustFactor = baseJsonResponse.getString("Wind-Gust");
+                String visibility = baseJsonResponse.getString("Visibility");
+
+                //TODO: TEST THIS SECTION FOR GETTING UNIT SCALES
+                String altimeterScale = unitScales.getString("Altimeter");
+                String AltitudeScale = unitScales.getString("Altitude");
+                String TempScale = unitScales.getString("Temperature");
+                String VisiblityScale = unitScales.getString("Visibility");
+                String WindSpeedScale = unitScales.getString("Wind-Speed");
+
+                //weatherScales Constructer
+                // public WeatherScales(String altimeterScale, String AltitudeScale, String TempScale, String VisiblityScale, String WindSpeedScale)
+                WeatherScales weatherScale = new WeatherScales(altimeterScale, AltitudeScale, TempScale, VisiblityScale, WindSpeedScale);
 
 
-                // Create a new {@link Event} object
-                return new Weather(metar, mAltimiter, mtemperture, mtime, mwindDirecton, mwindSpeed, gustFactor, CloudDetailsArrayList);
+                // public WeatherValues(String Altimiter, String temperture, String time, String windDirecton, String windSpeed, String gustFactor, String visibility){
+                WeatherValues weatherValues = new WeatherValues(mAltimiter, mtemperture, mtime, mwindDirecton, mwindSpeed, gustFactor, visibility);
+
+                // weather constructer below
+                //  public Weather(String metar, ArrayList<CloudDetails> cloudsArrayList, WeatherValues weatherValues, WeatherScales weatherScale) {
+
+                return new Weather(metar, CloudDetailsArrayList, weatherValues, weatherScale);
 
 
             } catch (JSONException e) {
 
                 try {
+
+                    //TODO: rework this it's not working, its intended to try and parse an errer message if there's no station
                     JSONObject baseJsonResponse = new JSONObject(weatherJSON);
-                    String Error=  baseJsonResponse.getString("Error");
+                    String Error = baseJsonResponse.getString("Error");
+
                     Context context = MainActivity.this;
-                    Toast.makeText(context,Error,Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, Error, Toast.LENGTH_LONG).show();
                 } catch (JSONException e1) {
                     e1.printStackTrace();
                 }

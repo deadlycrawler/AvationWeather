@@ -7,58 +7,37 @@ import java.util.ArrayList;
 public class Weather implements Serializable {
 
 
-    String mAltimiter;
-    String mtemperture;
-    String mtime;
-    String mwindDirecton;
-    String mwindSpeed;
-    String gustFactor;
     ArrayList<CloudDetails> mClouds;
+    WeatherValues weatherValues;
+    WeatherScales weatherScale;
+
     private String metar;
 
 
-    public Weather(String metar, String Altimiter, String temperture, String time, String windDirecton, String windSpeed, String gustFactor, ArrayList<CloudDetails> cloudsArrayList) {
+    public Weather(String metar, ArrayList<CloudDetails> cloudsArrayList, WeatherValues weatherValues, WeatherScales weatherScale) {
 
-        mAltimiter = Altimiter;
-        mtemperture = temperture;
-        mtime = time;
-        mwindDirecton = windDirecton;
-        mwindSpeed = windSpeed;
         this.metar = metar;
-        this.gustFactor = gustFactor;
-        mClouds = cloudsArrayList;
-
+        this.weatherScale = weatherScale;
+        this.weatherValues = weatherValues;
+        this.mClouds = cloudsArrayList;
     }
 
     public String getMetar() {
         return metar;
     }
 
-    public String getmAltimiter() {
-        return mAltimiter;
-    }
-
-    public String getMtemperture() {
-        return mtemperture;
-    }
-
-    public String getMtime() {
-        return mtime;
-    }
-
-    public String getMwindDirecton() {
-        return mwindDirecton;
-    }
-
-    public String getMwindSpeed() {
-        return mwindSpeed;
-    }
 
     public ArrayList<CloudDetails> getmClouds() {
         return mClouds;
     }
 
-    public String getGustFactor() {
-        return gustFactor;
+    public WeatherValues getWeatherValues() {
+        return weatherValues;
     }
+
+    public WeatherScales getWeatherScale() {
+        return weatherScale;
+    }
+
+
 }
