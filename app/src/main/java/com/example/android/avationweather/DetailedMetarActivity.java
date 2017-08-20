@@ -28,7 +28,7 @@ public class DetailedMetarActivity extends AppCompatActivity {
 
         weather = (Weather) getIntent().getSerializableExtra("weatherObject");
         weatherValues = weather.getWeatherValues();
-
+        //TODO: fix the metar time format, 201256z = 20th of the month at 12:56z
         String time = weatherValues.getMtime();
         StringBuilder sb = new StringBuilder(time);
 

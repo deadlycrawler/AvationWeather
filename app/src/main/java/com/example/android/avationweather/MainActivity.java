@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
     EditText userEnterdIcao;
 
     boolean fetched = false;
-    boolean resuming =false;
+    boolean resuming = false;
 
     Weather mWeather;
 
@@ -101,11 +101,12 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
 
     }
+
     //retrieves a fresh metar on resume of activity
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        resuming=true;
+        resuming = true;
         Start();
     }
 
@@ -163,7 +164,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
         String ICAO = userEnterdIcao.getText().toString();
 
         String fetching = "Fetching ";
-        if(resuming)fetching="Updating ";
+        if (resuming) fetching = "Updating ";
 
         if (isConnectedToInternet()) {
             if (ICAO.length() == 4) {
@@ -186,11 +187,10 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
 
                 task.execute();
-            } else if (ICAO.length() > 4) {
+            } else if (ICAO.length() > 4 || ICAO.length() < 3) {
 
                 Context contrxt = MainActivity.this;
                 Toast.makeText(contrxt, "check length of ICAO", Toast.LENGTH_LONG).show();
-                Log.d(MainActivity.LOG_TAG, "else running wihtout toast");
             }
         } else {
             Toast.makeText(this, "Check Network Connectivity", Toast.LENGTH_LONG).show();
