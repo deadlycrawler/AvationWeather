@@ -385,6 +385,16 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
             mWeather = weather;
         }
     }
+    //TODO: replace toast with a call to this method
+    public void showToast(final String toast)
+    {
+        runOnUiThread(new Runnable() {
+            public void run()
+            {
+                Toast.makeText(MainActivity.this, toast, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 
 }
