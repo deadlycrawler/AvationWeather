@@ -6,35 +6,22 @@
     android:layout_height="match_parent"
     tools:context="com.example.android.avationweather.MainActivity">
 
-    <TextView
-        android:id="@+id/putMetarHere"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Metar"
-        android:textSize="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.214" />
-
-
     <EditText
         android:id="@+id/putICAOhere"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:inputType="textNoSuggestions"
-        android:maxLines="1"
         android:hint="enter station  id"
+        android:inputType="textNoSuggestions"
+        android:maxLength="4"
+        android:maxLines="1"
         android:textAllCaps="true"
         android:textSize="45dp"
-        android:maxLength="4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.614" />
+        app:layout_constraintVertical_bias="0.784" />
 
     <Button
         android:id="@+id/fetchMetar"
@@ -48,10 +35,29 @@
         android:id="@+id/metarDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="I'm not a real pilot"
+        android:text="Plain English"
         android:textAllCaps="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
+
+    <ScrollView
+        android:layout_width="315dp"
+        android:layout_height="326dp"
+        tools:layout_editor_absoluteY="16dp"
+        tools:layout_editor_absoluteX="35dp">
+
+        <TextView
+            android:id="@+id/putMetarHere"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="Metar"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </ScrollView>
 
 
 </android.support.constraint.ConstraintLayout>

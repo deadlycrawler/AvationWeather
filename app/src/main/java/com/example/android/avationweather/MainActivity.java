@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
     //TODO: fix the settings screen to allow a user to enter a default weather station
     //TODO: Fix all the strings so that this can be easily translated
     //TODO: create a class to contain all the network stuff, this main class is larger then it needs to be
+    //TODO: make the "plain buttion just start an intent with the metar info no need to wait to call one first
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
