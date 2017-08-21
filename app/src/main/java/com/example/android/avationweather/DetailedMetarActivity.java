@@ -4,9 +4,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
+//this class displays the metar in a text View in a human readable version
 public class DetailedMetarActivity extends AppCompatActivity {
 
     Weather weather;
@@ -28,10 +33,10 @@ public class DetailedMetarActivity extends AppCompatActivity {
 
         weather = (Weather) getIntent().getSerializableExtra("weatherObject");
         weatherValues = weather.getWeatherValues();
-        //TODO: ADD a section for the date
 
 
         String time = weatherValues.getMtime();
+
         StringBuilder sbTime = new StringBuilder(time);
 
         //removes the month prefix now its just the hours and minutes
@@ -40,11 +45,17 @@ public class DetailedMetarActivity extends AppCompatActivity {
 
         sbTime.deleteCharAt(sbTime.length() - 1);
         //adds a colon to the time so that the display looks more timely
-        sbTime.insert(2,":");
+        sbTime.insert(2, ":");
         time = sbTime.toString() + "Z";
 
+        //formats the date basied of the system time, and then adds the date the metar specified, metars only specify day of the month and not
+        String date = new SimpleDateFormat("yyyy MMM").format(Calendar.getInstance().getTime());
+        String dateOfMonth;
 
-
+        //gets the time from metar and truncates everything but the first 2 digits(date)
+        StringBuilder sbDate = new StringBuilder(weatherValues.getMtime());
+        while (sbDate.length() > 2) sbDate.deleteCharAt(sbDate.length() - 1);
+        dateOfMonth = sbDate.toString();
 
 
         weatherScales = weather.getWeatherScale();
@@ -57,7 +68,8 @@ public class DetailedMetarActivity extends AppCompatActivity {
 
 
         String VerbosePart1 =
-                "Time: " + time + "\n" +
+                "Date: " + date + " " + dateOfMonth + "\n" +
+                        "Time: " + time + "\n" +
                         "Wind direction: " + weatherValues.getMwindDirecton() + "\n";
         String VerboseWindPart = "Wind Speed: " + weatherValues.getMwindSpeed() + " " + windSpeedScale + "\n";
 
