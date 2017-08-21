@@ -9,6 +9,8 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
+//todo: currently unused but i've got bit plans, going to turn this into a proper settings menu
+
 public class SettingsActivity extends AppCompatActivity {
 
     @Override

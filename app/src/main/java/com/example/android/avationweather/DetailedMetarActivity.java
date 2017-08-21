@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-//todo: Test this class
+
 public class DetailedMetarActivity extends AppCompatActivity {
 
     Weather weather;
@@ -28,16 +28,23 @@ public class DetailedMetarActivity extends AppCompatActivity {
 
         weather = (Weather) getIntent().getSerializableExtra("weatherObject");
         weatherValues = weather.getWeatherValues();
-        //TODO: fix the metar time format, 201256z = 20th of the month at 12:56z
+        //TODO: ADD a section for the date
+
+
         String time = weatherValues.getMtime();
-        StringBuilder sb = new StringBuilder(time);
+        StringBuilder sbTime = new StringBuilder(time);
 
-        sb.deleteCharAt(sb.length() - 1);
-        sb.deleteCharAt(sb.length() - 1);
-        sb.deleteCharAt(sb.length() - 1);
+        //removes the month prefix now its just the hours and minutes
+        sbTime.deleteCharAt(0);
+        sbTime.deleteCharAt(0);
+
+        sbTime.deleteCharAt(sbTime.length() - 1);
+        //adds a colon to the time so that the display looks more timely
+        sbTime.insert(2,":");
+        time = sbTime.toString() + "Z";
 
 
-        time = sb.toString() + "Z";
+
 
 
         weatherScales = weather.getWeatherScale();
@@ -68,7 +75,7 @@ public class DetailedMetarActivity extends AppCompatActivity {
 
         String VerbosePart3 =
                 "Visiblity: " + weatherValues.getVisibility() + " " + visibilityScale + "\n" +
-                        "Tempature: " + weatherValues.getMtemperture() + " "+DegreeSymbol + TempScale + "\n" +
+                        "Tempature: " + weatherValues.getMtemperture() + " " + DegreeSymbol + TempScale + "\n" +
                         "Altimiter setting: " + weatherValues.getmAltimiter() + " " + AltScale + "\n\n";
 
 

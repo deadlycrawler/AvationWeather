@@ -22,20 +22,20 @@ class Weather implements Serializable {
         this.mClouds = cloudsArrayList;
     }
 
-    public String getMetar() {
+    String getMetar() {
         return metar;
     }
 
 
-    public ArrayList<CloudDetails> getmClouds() {
+    ArrayList<CloudDetails> getmClouds() {
         return mClouds;
     }
 
-    public WeatherValues getWeatherValues() {
+    WeatherValues getWeatherValues() {
         return weatherValues;
     }
 
-    public WeatherScales getWeatherScale() {
+    WeatherScales getWeatherScale() {
         return weatherScale;
     }
 

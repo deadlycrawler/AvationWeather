@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
     //todo: change async task to loader
     //TODO: fix the settings screen to allow a user to enter a default weather station
     //TODO: Fix all the strings so that this can be easily translated
+    //TODO: create a class to contain all the network stuff, this main class is larger then it needs to be
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -148,8 +149,8 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
         if (connectivity != null) {
             NetworkInfo[] info = connectivity.getAllNetworkInfo();
             if (info != null)
-                for (int i = 0; i < info.length; i++)
-                    if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                for (NetworkInfo anInfo : info)
+                    if (anInfo.getState() == NetworkInfo.State.CONNECTED) {
                         return true;
                     }
 
@@ -302,7 +303,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
             try {
                 JSONObject baseJsonResponse = new JSONObject(weatherJSON);
 
-                //TODO: TEST THIS LINE FOR GETTING UNIT SCALES
+
                 JSONObject unitScales = baseJsonResponse.getJSONObject("Units");
 
 
@@ -334,7 +335,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
                 String gustFactor = baseJsonResponse.getString("Wind-Gust");
                 String visibility = baseJsonResponse.getString("Visibility");
 
-                //TODO: TEST THIS SECTION FOR GETTING UNIT SCALES
+
                 String altimeterScale = unitScales.getString("Altimeter");
                 String AltitudeScale = unitScales.getString("Altitude");
                 String TempScale = unitScales.getString("Temperature");

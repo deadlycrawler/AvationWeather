@@ -1,6 +1,7 @@
 package com.example.android.avationweather;
 
 //this class holds metar data
+//TODO: see if i can delete this class, seems to be redundant
 
 public class MetarDetails {
 

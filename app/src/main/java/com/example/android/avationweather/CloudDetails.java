@@ -4,22 +4,24 @@ import java.io.Serializable;
 
 //simple class to hold cloud densitys and altiudes
 
-public class CloudDetails implements Serializable{
+//narrowed class access no longer all public now private or package protected
 
-    String density;
-    String altitude;
+class CloudDetails implements Serializable{
 
-    public CloudDetails(String density, String altitiude){
+    private String density;
+    private String altitude;
+
+    CloudDetails(String density, String altitiude){
         this.density=density;
         this.altitude=altitiude;
 
     }
 
-    public String getDensity() {
+    String getDensity() {
         return density;
     }
 
-    public String getAltitude() {
+    String getAltitude() {
         return altitude;
     }
 }
