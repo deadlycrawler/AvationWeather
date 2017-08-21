@@ -361,12 +361,11 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
                 try {
 
-                    //TODO: rework this it's not working, its intended to try and parse an errer message if there's no station
+                    //TODO: change error message so that it is more user friendly
                     JSONObject baseJsonResponse = new JSONObject(weatherJSON);
                     String Error = baseJsonResponse.getString("Error");
 
-                    Context context = MainActivity.this;
-                    Toast.makeText(context, Error, Toast.LENGTH_LONG).show();
+                    showToast(Error);
                 } catch (JSONException e1) {
                     e1.printStackTrace();
                 }
