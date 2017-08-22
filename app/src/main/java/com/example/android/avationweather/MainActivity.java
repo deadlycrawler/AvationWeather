@@ -33,10 +33,10 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity /*implements SharedPreferences.OnSharedPreferenceChangeListener*/ {
 
-    //TODO: handle response when a non existent airport was selected
+
     //TODO: add a splash screen and find an artist to make a good spash screen to replace the crap you're going to put in it
     //TODO: change async task to loader
-    //TODO: fix the settings screen to allow a user to enter a default weather station
+    //TODO: fix the settings screen to allow a user to enter a default weather station(after the loader is implimented)
     //TODO: Fix all the strings so that this can be easily translated
     //TODO: create a class to contain all the network stuff, this main class is larger then it needs to be
     //TODO: make the "plain buttion just start an intent with the metar info no need to wait to call one first
