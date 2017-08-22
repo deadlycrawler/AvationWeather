@@ -8,27 +8,14 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity /*implements SharedPreferences.OnSharedPreferenceChangeListener*/ {
@@ -38,7 +25,6 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
     //TODO: change async task to loader
     //TODO: fix the settings screen to allow a user to enter a default weather station(after the loader is implimented)
     //TODO: Fix all the strings so that this can be easily translated
-    //TODO: create a class to contain all the network stuff, this main class is larger then it needs to be
     //TODO: make the "plain buttion just start an intent with the metar info no need to wait to call one first
     //TODO: add a sub package for the weather class and objects for weather
 
@@ -87,73 +73,8 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
                 startActivity(i);
             }
         });
-
-
-        // Obtain a reference to the SharedPreferences file for this app
-//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        // And register to be notified of preference changes
-        // So we know when the user has adjusted the query settings
-        // prefs.registerOnSharedPreferenceChangeListener(this);
-
-
     }
 
-    //retrieves a fresh metar on resume of activity
-    //TODO: fix the onResume functionality, it's running on start up (i think)
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        resuming = true;
-//        Start();
-//    }
-
-
-//    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-//        if (key.equals(getString(R.string.settings_ICAO_key))) {
-//           // SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-//
-//            String ICAO= key.toString();
-//
-//
-//
-//
-//            avationAsyncTask task = new avationAsyncTask();
-//            task.execute();
-//
-//        }
-//    }
-        //inflates the settings menu
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.main, menu);
-//        return true;
-//    }
-        //handles settings menu events
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//        if (id == R.id.action_settings) {
-//            Intent settingsIntent = new Intent(this, SettingsActivity.class);
-//            startActivity(settingsIntent);
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
-    //checks for internet conectivity
-    public boolean isConnectedToInternet() {
-        ConnectivityManager connectivity = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivity != null) {
-            NetworkInfo[] info = connectivity.getAllNetworkInfo();
-            if (info != null)
-                for (NetworkInfo anInfo : info)
-                    if (anInfo.getState() == NetworkInfo.State.CONNECTED) {
-                        return true;
-                    }
-
-        }
-        return false;
-    }
 
     //where it all starts, start is called when you hit the "fetch Metar" button
     public void Start() {
@@ -166,7 +87,6 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
         if (isConnectedToInternet()) {
             if (ICAO.length() == 4) {
-
 
                 String mIcaoString;
                 mIcaoString = ICAO;
@@ -194,9 +114,8 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
         }
 
-
     }
-
+    //displays Toasts when called
     public void showToast(final String toast) {
         runOnUiThread(new Runnable() {
             public void run() {
@@ -205,6 +124,23 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
         });
     }
 
+    private boolean isConnectedToInternet() {
+
+
+        ConnectivityManager connectivity = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo[] info = connectivity.getAllNetworkInfo();
+            if (info != null)
+                for (NetworkInfo anInfo : info)
+                    if (anInfo.getState() == NetworkInfo.State.CONNECTED) {
+                        return true;
+                    }
+
+        }
+        return false;
+    }
+
+    //AsyncTask does all the things
     private class avationAsyncTask extends AsyncTask<URL, Void, Weather> {
 
 
@@ -217,24 +153,23 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
         @Override
         protected Weather doInBackground(URL... urls) {
-            URL url = createUrl(AVWX_REQUEST_URL);
+            URL url = Networkhandler.createUrl(AVWX_REQUEST_URL);
 
             String jsonResponse = "";
             try {
-                //TODO: PUT THE NEW CLASS OBJECT HERE
-            //    jsonResponse = makeHttpRequest(url);
+
                 jsonResponse = Networkhandler.makeHttpRequest(url);
             } catch (IOException e) {
                 showToast("fail on makeHttpRequest(url)");
                 Log.e(LOG_TAG, "Problem retrieving the earthquake JSON results.", e);
             }
 
-            Weather weather = extractFeatureFromJson(jsonResponse);
-
+            Weather weather = JSON_Handler.extractFeatureFromJson(jsonResponse);
             return weather;
         }
 
 
+        //called when async task is done
         @Override
         protected void onPostExecute(Weather weather) {
             if (weather == null) {
@@ -244,96 +179,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
             updateUi(weather);
         }
 
-
-        private URL createUrl(String stringUrl) {
-
-            URL url;
-            try {
-                url = new URL(stringUrl);
-            } catch (MalformedURLException exception) {
-                Log.e(LOG_TAG, "Error with creating URL", exception);
-                return null;
-            }
-            return url;
-        }
-
-
-
-        //TODO: add a way to prevent crashing when the response is a non existent station
-        private Weather extractFeatureFromJson(String weatherJSON) {
-
-
-            try {
-                JSONObject baseJsonResponse = new JSONObject(weatherJSON);
-                JSONObject unitScales = baseJsonResponse.getJSONObject("Units");
-
-
-                JSONArray cloudArray = baseJsonResponse.getJSONArray("Cloud-List");
-                ArrayList<CloudDetails> CloudDetailsArrayList = new ArrayList<>();
-
-                if (cloudArray.length() == 0) {
-                    CloudDetails cloudDetailsClass = new CloudDetails("Clear skies", "every level");
-                    CloudDetailsArrayList.add(cloudDetailsClass);
-                } else {
-                    for (int i = 0; i < cloudArray.length(); i++) {
-
-                        JSONArray cloudDetails = cloudArray.getJSONArray(i);
-                        String cloudDensityString = cloudDetails.getString(0);
-                        String cloudAltitudeString = cloudDetails.getString(1);
-                        CloudDetails cloudDetailsClass = new CloudDetails(cloudDensityString, cloudAltitudeString);
-                        CloudDetailsArrayList.add(cloudDetailsClass);
-                    }
-                }
-
-
-                String metar = baseJsonResponse.getString("Raw-Report");
-
-                String mAltimiter = baseJsonResponse.getString("Altimeter");
-                String mtemperture = baseJsonResponse.getString("Temperature");
-                String mtime = baseJsonResponse.getString("Time");
-                String mwindDirecton = baseJsonResponse.getString("Wind-Direction");
-                String mwindSpeed = baseJsonResponse.getString("Wind-Speed");
-                String gustFactor = baseJsonResponse.getString("Wind-Gust");
-                String visibility = baseJsonResponse.getString("Visibility");
-
-
-                String altimeterScale = unitScales.getString("Altimeter");
-                String AltitudeScale = unitScales.getString("Altitude");
-                String TempScale = unitScales.getString("Temperature");
-                String VisiblityScale = unitScales.getString("Visibility");
-                String WindSpeedScale = unitScales.getString("Wind-Speed");
-
-                //weatherScales Constructer
-                // public WeatherScales(String altimeterScale, String AltitudeScale, String TempScale, String VisiblityScale, String WindSpeedScale)
-                WeatherScales weatherScale = new WeatherScales(altimeterScale, AltitudeScale, TempScale, VisiblityScale, WindSpeedScale);
-
-
-                // public WeatherValues(String Altimiter, String temperture, String time, String windDirecton, String windSpeed, String gustFactor, String visibility){
-                WeatherValues weatherValues = new WeatherValues(mAltimiter, mtemperture, mtime, mwindDirecton, mwindSpeed, gustFactor, visibility);
-
-                // weather constructer below
-                //  public Weather(String metar, ArrayList<CloudDetails> cloudsArrayList, WeatherValues weatherValues, WeatherScales weatherScale) {
-
-                return new Weather(metar, CloudDetailsArrayList, weatherValues, weatherScale);
-
-
-            } catch (JSONException e) {
-                //if the inital JSON parse fails this method is called to see if the "Error" mesage JSON was called
-                try {
-
-
-                    JSONObject baseJsonResponse = new JSONObject(weatherJSON);
-                    String Error = baseJsonResponse.getString("Error");
-                    //  String Error = "Requested Weather station Not Found";
-                    showToast(Error);
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
-            }
-
-            return null;
-        }
-
+        //called to update the UI
         private void updateUi(Weather weather) {
 
             TextView metar = (TextView) findViewById(R.id.putMetarHere);

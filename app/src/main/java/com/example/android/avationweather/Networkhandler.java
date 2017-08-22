@@ -1,7 +1,10 @@
 package com.example.android.avationweather;
 
-//this class handles the network and JSON code response
+//this class handles the network and JSON code response, network related methods are deposited here
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
@@ -18,6 +22,23 @@ import static com.example.android.avationweather.MainActivity.LOG_TAG;
 public  class Networkhandler {
 
 
+
+    //converts String to URL object
+    public static URL createUrl(String stringUrl) {
+
+        URL url;
+        try {
+            url = new URL(stringUrl);
+        } catch (MalformedURLException exception) {
+            Log.e(LOG_TAG, "Error with creating URL", exception);
+            return null;
+        }
+        return url;
+    }
+
+
+
+    //takes in URL object and converts the responce to a JSON object
     public static String makeHttpRequest(URL url) throws IOException {
         String jsonResponse = "";
         HttpURLConnection urlConnection = null;
@@ -60,6 +81,7 @@ public  class Networkhandler {
         }
         return output.toString();
     }
+
 
 
 }
