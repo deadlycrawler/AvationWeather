@@ -1,12 +1,12 @@
 package com.example.android.avationweather;
 
+import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,31 +20,33 @@ import java.io.IOException;
 import java.net.URL;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Weather> {
 
 
     //TODO: add a splash screen and find an artist to make a good spash screen to replace the crap you're going to put in it
-    //TODO: change async task to loader
     //TODO: fix the settings screen to allow a user to enter a default weather station(after the loader is implimented)
     //TODO: Fix all the strings so that this can be easily translated
     //TODO: make the "plain buttion just start an intent with the metar info no need to wait to call one first
     //TODO: add a sub package for the weather class and objects for weather
+    //TODO: fix the metar getting reset on screen rotation
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
-
+    private static final int WEATHER_LOADER_ID = 1;
+    private static boolean noError = true;
     Button FetchMetar;
     Button DetailViewButton;
     EditText userEnterdIcao;
-
-    String requestedWeatherStationICAO;
-
+    String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/";
+    String userRequestedICAO;
+    String concatinatedURL;
     boolean fetched = false;
-    boolean resuming = false;
-
-    private static boolean noError = true;
-
     Weather mWeather;
 
+    //allows the state of noError to be set
+    public static void setNoError(Boolean bool) {
+        MainActivity.noError = bool;
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,41 +75,26 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
     }
 
-
     //where it all starts, start is called when you hit the "fetch Metar" button
+    //TODO: EVALUATE THIS METHOD AND SEE IF I CANT SIMPLIFY IT
     public void MetarFetch() {
-        MainActivity.noError=true;
-
-        String ICAO = userEnterdIcao.getText().toString();
-        this.requestedWeatherStationICAO = ICAO;
+        MainActivity.noError = true;
+        this.userRequestedICAO = userEnterdIcao.getText().toString();
         String fetching = "Fetching ";
-        if (resuming) fetching = "Updating ";
-
+        //TODO: fix for non 4 digit cases
         if (isConnectedToInternet()) {
-            if (ICAO.length() == 4) {
-
-                String mIcaoString;
-                mIcaoString = ICAO;
-                String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/" + mIcaoString;
-                showToast(fetching + mIcaoString);
-                avationAsyncTask task = new avationAsyncTask(AVWX_REQUEST_URL);
-                task.execute();
-
-            } else if (ICAO.length() == 3) {
-                String mIcaoString;
-                mIcaoString = "k" + ICAO;
-                String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/" + mIcaoString;
-
-                showToast(fetching + mIcaoString);
-                avationAsyncTask task = new avationAsyncTask(AVWX_REQUEST_URL);
+            if (userRequestedICAO.length() == 4) {
 
 
-                task.execute();
-            } else if (ICAO.length() > 4 || ICAO.length() < 3) {
+                concatinatedURL = this.AVWX_REQUEST_URL + userRequestedICAO;
+                showToast(fetching + userRequestedICAO);
+
+                LoaderManager loaderManager = getLoaderManager();
+                loaderManager.restartLoader(WEATHER_LOADER_ID, null, this);
+
+            } else {
 
                 showToast("check length of ICAO");
             }
@@ -132,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     public void showToast(final String toast) {
 
 
@@ -141,13 +127,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, toast, Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-
-    //allows the state of noError to be set
-    public static void setNoError(Boolean bool){
-        MainActivity.noError=bool;
-
     }
 
     private boolean isConnectedToInternet() {
@@ -166,60 +145,37 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    @Override
+    public Loader onCreateLoader(int id, Bundle args) {
 
 
+        return new WeatherLoader(this, concatinatedURL);
+    }
 
-
-
-
-
-    //AsyncTask does all the things
-    private class avationAsyncTask extends AsyncTask<URL, Void, Weather> {
-
-
-        String AVWX_REQUEST_URL = "";
-
-        private avationAsyncTask(String AVWX_REQUEST_URL_fromAbove) {
-            AVWX_REQUEST_URL = AVWX_REQUEST_URL_fromAbove;
+    @Override
+    public void onLoadFinished(Loader loader, Weather weather) {
+        if (weather == null) {
+            return;
         }
 
-
-        @Override
-        protected Weather doInBackground(URL... urls) {
-            URL url = Networkhandler.createUrl(AVWX_REQUEST_URL);
-
-            String jsonResponse = "";
-            try {
-
-                jsonResponse = Networkhandler.makeHttpRequest(url);
-            } catch (IOException e) {
-                showToast("fail on makeHttpRequest(url)");
-                Log.e(LOG_TAG, "Problem retrieving the earthquake JSON results.", e);
-            }
-
-            Weather weather = JSON_Handler.extractFeatureFromJson(jsonResponse);
-            return weather;
-        }
+        updateUi(weather);
 
 
-        //called when async task is done
-        @Override
-        protected void onPostExecute(Weather weather) {
-            if (weather == null) {
-                return;
-            }
+    }
 
-            updateUi(weather);
-        }
+    @Override
+    public void onLoaderReset(Loader loader) {
+        //TODO:test to see if i need this
 
-        //called to update the UI
-        private void updateUi(Weather weather) {
+    }
 
-            TextView metar = (TextView) findViewById(R.id.putMetarHere);
-            metar.setText(weather.getMetar());
-            fetched = true;
-            mWeather = weather;
-        }
+    //called to update the UI
+    private void updateUi(Weather weather) {
+
+        TextView metar = (TextView) findViewById(R.id.putMetarHere);
+        metar.setText(weather.getMetar());
+        fetched = true;
+        mWeather = weather;
     }
 
 

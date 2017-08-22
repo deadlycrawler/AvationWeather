@@ -41,6 +41,7 @@ public class WeatherLoader extends AsyncTaskLoader{
         }
 
         Weather weather = JSON_Handler.extractFeatureFromJson(jsonResponse);
+
         return weather;
     }
 }
