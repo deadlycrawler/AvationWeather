@@ -33,20 +33,22 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity /*implements SharedPreferences.OnSharedPreferenceChangeListener*/ {
 
-    //TODO: handle more possible netWork errors, what happens when there's no internet but you have a network connection
     //TODO: handle response when a non existent airport was selected
     //TODO: add a splash screen and find an artist to make a good spash screen to replace the crap you're going to put in it
-    //todo: change async task to loader
+    //TODO: change async task to loader
     //TODO: fix the settings screen to allow a user to enter a default weather station
     //TODO: Fix all the strings so that this can be easily translated
     //TODO: create a class to contain all the network stuff, this main class is larger then it needs to be
     //TODO: make the "plain buttion just start an intent with the metar info no need to wait to call one first
+    //TODO: add a sub package for the weather class and objects for weather
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     Button FetchMetar;
     Button DetailViewButton;
     EditText userEnterdIcao;
+
+    String requestedWeatherStationICAO;
 
     boolean fetched = false;
     boolean resuming = false;
@@ -164,7 +166,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
 
         String ICAO = userEnterdIcao.getText().toString();
-
+        this.requestedWeatherStationICAO = ICAO;
         String fetching = "Fetching ";
         if (resuming) fetching = "Updating ";
 
@@ -274,7 +276,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
             } catch (IOException e) {
-                showToast("fail on HTTPRequest");
+                showToast("No Response From server");
                 Log.e(LOG_TAG, "Problem retrieving the earthquake JSON results.", e);
             } finally {
                 if (urlConnection != null) {
@@ -308,8 +310,6 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
             try {
                 JSONObject baseJsonResponse = new JSONObject(weatherJSON);
-
-
                 JSONObject unitScales = baseJsonResponse.getJSONObject("Units");
 
 
@@ -363,13 +363,13 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
 
             } catch (JSONException e) {
-
+                //if the inital JSON parse fails this method is called to see if the "Error" mesage JSON was called
                 try {
 
-                    //TODO: change error message so that it is more user friendly
-                    JSONObject baseJsonResponse = new JSONObject(weatherJSON);
-                    String Error = baseJsonResponse.getString("Error");
 
+                    JSONObject baseJsonResponse = new JSONObject(weatherJSON);
+                    //String Error = baseJsonResponse.getString("Error");
+                    String Error = "Requested Weather station Not Found";
                     showToast(Error);
                 } catch (JSONException e1) {
                     e1.printStackTrace();
