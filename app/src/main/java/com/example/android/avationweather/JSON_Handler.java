@@ -1,5 +1,8 @@
 package com.example.android.avationweather;
 
+import android.content.Context;
+import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,19 +73,24 @@ public class JSON_Handler {
 
 
         } catch (JSONException e) {
-            //if the inital JSON parse fails this method is called to see if the "Error" mesage JSON was called
+            //if the inital JSON parse fails this method is called to see if the "noError" mesage JSON was called
             try {
 
-//TODO: find way to shwo toasts from down here
+//TODO: find way to shwo toasts from down here or a another way to display the error, now it just over write the metar text
                 JSONObject baseJsonResponse = new JSONObject(weatherJSON);
                 String Error = baseJsonResponse.getString("Error");
-                //  String Error = "Requested Weather station Not Found";
-               // showToast(Error);
+
+                //sets the state of noError to be false to prevent code from being run on nothing
+                MainActivity.setNoError(false);
+
+                return new Weather(Error,null,null,null);
             } catch (JSONException e1) {
-                e1.printStackTrace();
+
             }
         }
 
         return null;
     }
+
+
 }

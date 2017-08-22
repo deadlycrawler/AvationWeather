@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
     boolean fetched = false;
     boolean resuming = false;
 
+    private static boolean noError = true;
+
     Weather mWeather;
 
 
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         FetchMetar = (Button) findViewById(R.id.fetchMetar);
         DetailViewButton = (Button) findViewById(R.id.metarDetails);
@@ -57,7 +60,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
             @Override
             public void onClick(View v) {
-                Start();
+                MetarFetch();
             }
         });
 
@@ -66,19 +69,15 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
             @Override
             public void onClick(View v) {
-
-                DetailedMetarActivity activty = new DetailedMetarActivity();
-                Intent i = new Intent(MainActivity.this, activty.getClass());
-                i.putExtra("weatherObject", mWeather);
-                startActivity(i);
+                detailedView();
             }
         });
     }
 
 
     //where it all starts, start is called when you hit the "fetch Metar" button
-    public void Start() {
-
+    public void MetarFetch() {
+        MainActivity.noError=true;
 
         String ICAO = userEnterdIcao.getText().toString();
         this.requestedWeatherStationICAO = ICAO;
@@ -115,13 +114,37 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
         }
 
     }
-    //displays Toasts when called
+
+    //called when user presses the detailed View button
+    private void detailedView() {
+
+        if (noError) {
+
+            DetailedMetarActivity activty = new DetailedMetarActivity();
+            Intent i = new Intent(MainActivity.this, activty.getClass());
+            i.putExtra("weatherObject", mWeather);
+            startActivity(i);
+        } else {
+            showToast("Weather station was invalid");
+        }
+    }
+
+
     public void showToast(final String toast) {
+
+
         runOnUiThread(new Runnable() {
             public void run() {
                 Toast.makeText(MainActivity.this, toast, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+
+    //allows the state of noError to be set
+    public static void setNoError(Boolean bool){
+        MainActivity.noError=bool;
+
     }
 
     private boolean isConnectedToInternet() {
