@@ -2,9 +2,11 @@ package com.example.android.avationweather;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.Loader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 
 
-public class MainActivity extends AppCompatActivity /*implements SharedPreferences.OnSharedPreferenceChangeListener*/ {
+public class MainActivity extends AppCompatActivity {
 
 
     //TODO: add a splash screen and find an artist to make a good spash screen to replace the crap you're going to put in it
@@ -49,12 +51,10 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        //xml assets
         FetchMetar = (Button) findViewById(R.id.fetchMetar);
         DetailViewButton = (Button) findViewById(R.id.metarDetails);
         userEnterdIcao = (EditText) findViewById(R.id.putICAOhere);
-
-
         FetchMetar.setOnClickListener(new View.OnClickListener() {
 
 
@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
                 MetarFetch();
             }
         });
-
         DetailViewButton.setOnClickListener(new View.OnClickListener() {
 
 
@@ -72,6 +71,10 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
                 detailedView();
             }
         });
+
+
+
+
     }
 
 
@@ -162,6 +165,13 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
         }
         return false;
     }
+
+
+
+
+
+
+
 
     //AsyncTask does all the things
     private class avationAsyncTask extends AsyncTask<URL, Void, Weather> {
