@@ -6,18 +6,13 @@ import android.content.Intent;
 import android.content.Loader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.IOException;
-import java.net.URL;
 
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Weather> {
@@ -165,7 +160,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader loader) {
-        //TODO:test to see if i need this
 
     }
 
