@@ -81,10 +81,10 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
             @Override
             public void onClick(View v) {
 
-                    DetailedMetarActivity activty = new DetailedMetarActivity();
-                    Intent i = new Intent(MainActivity.this, activty.getClass());
-                    i.putExtra("weatherObject", mWeather);
-                    startActivity(i);
+                DetailedMetarActivity activty = new DetailedMetarActivity();
+                Intent i = new Intent(MainActivity.this, activty.getClass());
+                i.putExtra("weatherObject", mWeather);
+                startActivity(i);
             }
         });
 
@@ -122,24 +122,25 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 //
 //        }
 //    }
+        //inflates the settings menu
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.main, menu);
+//        return true;
+//    }
+        //handles settings menu events
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        int id = item.getItemId();
+//        if (id == R.id.action_settings) {
+//            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+//            startActivity(settingsIntent);
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            Intent settingsIntent = new Intent(this, SettingsActivity.class);
-            startActivity(settingsIntent);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
+    //checks for internet conectivity
     public boolean isConnectedToInternet() {
         ConnectivityManager connectivity = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
@@ -220,7 +221,9 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
             String jsonResponse = "";
             try {
-                jsonResponse = makeHttpRequest(url);
+                //TODO: PUT THE NEW CLASS OBJECT HERE
+            //    jsonResponse = makeHttpRequest(url);
+                jsonResponse = Networkhandler.makeHttpRequest(url);
             } catch (IOException e) {
                 showToast("fail on makeHttpRequest(url)");
                 Log.e(LOG_TAG, "Problem retrieving the earthquake JSON results.", e);
@@ -254,48 +257,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
             return url;
         }
 
-        private String makeHttpRequest(URL url) throws IOException {
-            String jsonResponse = "";
-            HttpURLConnection urlConnection = null;
-            InputStream inputStream = null;
 
-
-            try {
-                urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.setReadTimeout(10000 /* milliseconds */);
-                urlConnection.setConnectTimeout(15000 /* milliseconds */);
-                urlConnection.connect();
-                inputStream = urlConnection.getInputStream();
-                jsonResponse = readFromStream(inputStream);
-            } catch (IOException e) {
-                showToast("No Response From server");
-                Log.e(LOG_TAG, "Problem retrieving the earthquake JSON results.", e);
-            } finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect();
-                }
-                if (inputStream != null) {
-                    // function must handle java.io.IOException here
-                    inputStream.close();
-                }
-            }
-            return jsonResponse;
-        }
-
-        private String readFromStream(InputStream inputStream) throws IOException {
-            StringBuilder output = new StringBuilder();
-            if (inputStream != null) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
-                BufferedReader reader = new BufferedReader(inputStreamReader);
-                String line = reader.readLine();
-                while (line != null) {
-                    output.append(line);
-                    line = reader.readLine();
-                }
-            }
-            return output.toString();
-        }
 
         //TODO: add a way to prevent crashing when the response is a non existent station
         private Weather extractFeatureFromJson(String weatherJSON) {
