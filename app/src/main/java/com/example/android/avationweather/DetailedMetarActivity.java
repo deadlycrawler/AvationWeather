@@ -4,11 +4,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import java.text.DateFormat;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 
 //this class displays the metar in a text View in a human readable version
@@ -50,7 +49,10 @@ public class DetailedMetarActivity extends AppCompatActivity {
         time = sbTime.toString() + "Z";
 
         //formats the date basied of the system time, and then adds the date the metar specified, metars only specify day of the month and not
+       //TODO: set the date to return the correct time zone,
         String date = new SimpleDateFormat("yyyy MMM").format(Calendar.getInstance().getTime());
+
+
         String dateOfMonth;
 
         //gets the time from metar and truncates everything but the first 2 digits(date)

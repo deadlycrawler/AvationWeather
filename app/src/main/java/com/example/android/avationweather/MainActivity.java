@@ -88,8 +88,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
 
                 } else {
-
-                    Toast.makeText(MainActivity.this, "you want me to show you details of nothing?", Toast.LENGTH_LONG).show();
+                    showToast("you want me to show you details of nothing?");
                 }
             }
         });
@@ -105,12 +104,13 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
     }
 
     //retrieves a fresh metar on resume of activity
-    @Override
-    public void onResume() {
-        super.onResume();
-        resuming = true;
-        Start();
-    }
+    //TODO: fix the onResume functionality, it's running on start up (i think)
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        resuming = true;
+//        Start();
+//    }
 
 
 //    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
                 String mIcaoString;
                 mIcaoString = ICAO;
                 String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/" + mIcaoString;
-                Toast.makeText(getApplicationContext(), fetching + mIcaoString, Toast.LENGTH_LONG).show();
+                showToast(fetching + mIcaoString);
                 avationAsyncTask task = new avationAsyncTask(AVWX_REQUEST_URL);
                 task.execute();
 
@@ -184,22 +184,29 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
                 mIcaoString = "k" + ICAO;
                 String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/" + mIcaoString;
 
-                Toast.makeText(getApplicationContext(), fetching + mIcaoString, Toast.LENGTH_LONG).show();
+                showToast(fetching + mIcaoString);
                 avationAsyncTask task = new avationAsyncTask(AVWX_REQUEST_URL);
 
 
                 task.execute();
             } else if (ICAO.length() > 4 || ICAO.length() < 3) {
 
-                Context contrxt = MainActivity.this;
-                Toast.makeText(contrxt, "check length of ICAO", Toast.LENGTH_LONG).show();
+                showToast("check length of ICAO");
             }
         } else {
-            Toast.makeText(this, "Check Network Connectivity", Toast.LENGTH_LONG).show();
+            showToast("Check Network Connectivity");
 
         }
 
 
+    }
+
+    public void showToast(final String toast) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                Toast.makeText(MainActivity.this, toast, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private class avationAsyncTask extends AsyncTask<URL, Void, Weather> {
@@ -220,8 +227,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
             try {
                 jsonResponse = makeHttpRequest(url);
             } catch (IOException e) {
-                Context context = MainActivity.this;
-                Toast.makeText(context, "fail on makeHttpRequest(url)", Toast.LENGTH_LONG).show();
+                showToast("fail on makeHttpRequest(url)");
                 Log.e(LOG_TAG, "Problem retrieving the earthquake JSON results.", e);
             }
 
@@ -268,8 +274,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
             } catch (IOException e) {
-                Context context = MainActivity.this;
-                Toast.makeText(context, "fail on HTTPRequest", Toast.LENGTH_LONG).show();
+                showToast("fail on HTTPRequest");
                 Log.e(LOG_TAG, "Problem retrieving the earthquake JSON results.", e);
             } finally {
                 if (urlConnection != null) {
@@ -369,9 +374,7 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
                 } catch (JSONException e1) {
                     e1.printStackTrace();
                 }
-
             }
-
 
             return null;
         }
@@ -383,16 +386,6 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
             fetched = true;
             mWeather = weather;
         }
-    }
-    //TODO: replace toast with a call to this method
-    public void showToast(final String toast)
-    {
-        runOnUiThread(new Runnable() {
-            public void run()
-            {
-                Toast.makeText(MainActivity.this, toast, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
 
