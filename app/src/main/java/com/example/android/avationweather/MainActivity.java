@@ -80,18 +80,11 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
             @Override
             public void onClick(View v) {
-                if (fetched) {
 
                     DetailedMetarActivity activty = new DetailedMetarActivity();
                     Intent i = new Intent(MainActivity.this, activty.getClass());
                     i.putExtra("weatherObject", mWeather);
-
                     startActivity(i);
-
-
-                } else {
-                    showToast("you want me to show you details of nothing?");
-                }
             }
         });
 
@@ -368,8 +361,8 @@ public class MainActivity extends AppCompatActivity /*implements SharedPreferenc
 
 
                     JSONObject baseJsonResponse = new JSONObject(weatherJSON);
-                    //String Error = baseJsonResponse.getString("Error");
-                    String Error = "Requested Weather station Not Found";
+                    String Error = baseJsonResponse.getString("Error");
+                    //  String Error = "Requested Weather station Not Found";
                     showToast(Error);
                 } catch (JSONException e1) {
                     e1.printStackTrace();
