@@ -3,14 +3,14 @@ package com.example.android.avationweather;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
-//todo: currently unused but i've got bit plans, going to turn this into a proper settings menu
-
+//TODO: ADD Checkbox to enable default icao instead of it being always on
 public class SettingsActivity extends AppCompatActivity {
 
     @Override
@@ -28,6 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings_main);
+
             Preference ICAO = findPreference(getString(R.string.settings_ICAO_key));
             bindPreferenceSummaryToValue(ICAO);
 

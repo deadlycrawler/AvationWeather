@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     tools:context="com.example.android.avationweather.MainActivity">
 
     <EditText
@@ -17,6 +19,8 @@
         android:maxLines="1"
         android:textAllCaps="true"
         android:textSize="45dp"
+        android:focusableInTouchMode="true"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

@@ -4,10 +4,14 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,15 +19,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Weather> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Weather>, SharedPreferences.OnSharedPreferenceChangeListener {
 
 
     //TODO: add a splash screen and find an artist to make a good spash screen to replace the crap you're going to put in it
-    //TODO: fix the settings screen to allow a user to enter a default weather station(after the loader is implimented)
     //TODO: Fix all the strings so that this can be easily translated
     //TODO: make the "plain buttion just start an intent with the metar info no need to wait to call one first
     //TODO: add a sub package for the weather class and objects for weather
-    //TODO: fix the metar getting reset on screen rotation
+    //TODO: fix the metar getting reset on screen rotation(right now i just disabled screen roattion #bandaid)
+    //TODO: add settings checkbox to enable default weather station ICAO
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int WEATHER_LOADER_ID = 1;
@@ -52,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         FetchMetar = (Button) findViewById(R.id.fetchMetar);
         DetailViewButton = (Button) findViewById(R.id.metarDetails);
         userEnterdIcao = (EditText) findViewById(R.id.putICAOhere);
+
         FetchMetar.setOnClickListener(new View.OnClickListener() {
 
 
@@ -70,7 +75,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         });
 
 
+        // Obtain a reference to the SharedPreferences file  And register to be notified of preference changes
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.registerOnSharedPreferenceChangeListener(this);
+
+        String DefaultICAO = prefs.getString(getString(R.string.settings_ICAO_key), (getString(R.string.settings_DefaultICAO)));
+
+        userEnterdIcao.setText(DefaultICAO);
+
+
+        //todo: part of the handling of the checkbox but i just cant quite figure it out
+        boolean DefaultEnabled = prefs.getBoolean(getString(R.string.useDefault_key),(Boolean.valueOf(getString(R.string.DefaultOnLoadCheckbox))));
+        showToast(String.valueOf(DefaultEnabled));
+
     }
+
+
 
     //where it all starts, start is called when you hit the "fetch Metar" button
     //TODO: EVALUATE THIS METHOD AND SEE IF I CANT SIMPLIFY IT
@@ -115,7 +135,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     public void showToast(final String toast) {
-
 
         runOnUiThread(new Runnable() {
             public void run() {
@@ -173,4 +192,26 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            startActivity(settingsIntent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

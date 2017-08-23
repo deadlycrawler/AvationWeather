@@ -8,4 +8,12 @@
         android:selectAllOnFocus="true"
         android:title="@string/Current_ICAO" />
 
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/useDefault_key"
+        android:title="@string/DefaultOnLoadCheckbox">
+    </CheckBoxPreference>
+
+
 </PreferenceScreen>

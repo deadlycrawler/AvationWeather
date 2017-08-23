@@ -2,6 +2,8 @@
     <string name="app_name">AvationWeather</string>
 
     <string name="settings_DefaultICAO">kbab</string>
-    <string name="Current_ICAO">Current ICAO</string>
+    <string name="Current_ICAO">Default station</string>
     <string name="settings_ICAO_key">ICAO_key</string>
+    <string name="useDefault_key">useDefault_key</string>
+    <string name="DefaultOnLoadCheckbox">Enter Default on load</string>
 </resources>
