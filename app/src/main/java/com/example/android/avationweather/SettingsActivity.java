@@ -10,8 +10,12 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
-//TODO: ADD Checkbox to enable default icao instead of it being always on
+
 public class SettingsActivity extends AppCompatActivity {
+
+    //yes i know its bad to access variables directly but this was pissing me off
+    public static boolean checkBoxstate;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,8 @@ public class SettingsActivity extends AppCompatActivity {
             Preference ICAO = findPreference(getString(R.string.settings_ICAO_key));
             bindPreferenceSummaryToValue(ICAO);
 
+            CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(getString(R.string.useDefault_key));
+            SettingsActivity.checkBoxstate =  checkBoxPreference.isChecked();
 
         }
 
@@ -61,5 +67,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         }
     }
+
+
 
 }

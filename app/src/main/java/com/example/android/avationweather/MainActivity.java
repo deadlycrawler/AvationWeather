@@ -79,14 +79,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.registerOnSharedPreferenceChangeListener(this);
 
-        String DefaultICAO = prefs.getString(getString(R.string.settings_ICAO_key), (getString(R.string.settings_DefaultICAO)));
-
-        userEnterdIcao.setText(DefaultICAO);
+        if(SettingsActivity.checkBoxstate) {
+            String DefaultICAO = prefs.getString(getString(R.string.settings_ICAO_key), (getString(R.string.settings_DefaultICAO)));
+            userEnterdIcao.setText(DefaultICAO);
+        }
 
 
         //todo: part of the handling of the checkbox but i just cant quite figure it out
-        boolean DefaultEnabled = prefs.getBoolean(getString(R.string.useDefault_key),(Boolean.valueOf(getString(R.string.DefaultOnLoadCheckbox))));
-        showToast(String.valueOf(DefaultEnabled));
+//        boolean DefaultEnabled = prefs.getBoolean(getString(R.string.useDefault_key),(Boolean.valueOf(getString(R.string.DefaultOnLoadCheckbox))));
+//        showToast(String.valueOf(DefaultEnabled));
 
     }
 
