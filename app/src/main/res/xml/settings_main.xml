@@ -3,7 +3,9 @@
 
     <EditTextPreference
         android:defaultValue="@string/settings_DefaultICAO"
-        android:inputType="text"
+        android:inputType="textNoSuggestions"
+        android:maxLength="4"
+        android:maxLines="1"
         android:key="@string/settings_ICAO_key"
         android:selectAllOnFocus="true"
         android:title="@string/Current_ICAO" />

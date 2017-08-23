@@ -24,10 +24,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     //TODO: add a splash screen and find an artist to make a good spash screen to replace the crap you're going to put in it
     //TODO: Fix all the strings so that this can be easily translated
-    //TODO: make the "plain buttion just start an intent with the metar info no need to wait to call one first
+    //TODO: make the "plain button just start an intent with the metar info no need to wait to call one first
     //TODO: add a sub package for the weather class and objects for weather
     //TODO: fix the metar getting reset on screen rotation(right now i just disabled screen roattion #bandaid)
-    //TODO: add settings checkbox to enable default weather station ICAO
+    //TODO: parse remarks for bad weather conditions
+    //TODO: FIX the metar text disaprearing when you go to the settings menu
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int WEATHER_LOADER_ID = 1;
@@ -79,41 +80,42 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.registerOnSharedPreferenceChangeListener(this);
 
-        if(SettingsActivity.checkBoxstate) {
+        Boolean checkFlag;
+        checkFlag=PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean(getString(R.string.useDefault_key),false);
+
+        if(checkFlag) {
             String DefaultICAO = prefs.getString(getString(R.string.settings_ICAO_key), (getString(R.string.settings_DefaultICAO)));
             userEnterdIcao.setText(DefaultICAO);
         }
 
 
-        //todo: part of the handling of the checkbox but i just cant quite figure it out
-//        boolean DefaultEnabled = prefs.getBoolean(getString(R.string.useDefault_key),(Boolean.valueOf(getString(R.string.DefaultOnLoadCheckbox))));
-//        showToast(String.valueOf(DefaultEnabled));
 
     }
 
 
 
     //where it all starts, start is called when you hit the "fetch Metar" button
-    //TODO: EVALUATE THIS METHOD AND SEE IF I CANT SIMPLIFY IT
+
     public void MetarFetch() {
         MainActivity.noError = true;
         this.userRequestedICAO = userEnterdIcao.getText().toString();
         String fetching = "Fetching ";
-        //TODO: fix for non 4 digit cases
         if (isConnectedToInternet()) {
             if (userRequestedICAO.length() == 4) {
 
-
                 concatinatedURL = this.AVWX_REQUEST_URL + userRequestedICAO;
                 showToast(fetching + userRequestedICAO);
-
+                LoaderManager loaderManager = getLoaderManager();
+                loaderManager.restartLoader(WEATHER_LOADER_ID, null, this);
+            //adds a "k" for usa stations
+            } else if(userRequestedICAO.length()==3){
+                userRequestedICAO=  "K"+userRequestedICAO;
+                concatinatedURL = this.AVWX_REQUEST_URL +userRequestedICAO;
+                showToast(fetching + userRequestedICAO);
                 LoaderManager loaderManager = getLoaderManager();
                 loaderManager.restartLoader(WEATHER_LOADER_ID, null, this);
 
-            } else {
-
-                showToast("check length of ICAO");
-            }
+            }else{showToast("check length of ICAO");}
         } else {
             showToast("Check Network Connectivity");
 

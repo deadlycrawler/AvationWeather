@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
 
         android:hint="enter station  id"
-        android:inputType="textNoSuggestions"
+        android:inputType="textNoSuggestions|textCapCharacters"
         android:maxLength="4"
         android:maxLines="1"
         android:textAllCaps="true"

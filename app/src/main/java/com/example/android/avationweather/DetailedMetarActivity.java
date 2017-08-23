@@ -8,10 +8,12 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 
 //this class displays the metar in a text View in a human readable version
 //TODO: fix the damn metar text to appear in the center of the screen on all devices or at least univorm
+//TODO: REVERSE THE DATE format
 public class DetailedMetarActivity extends AppCompatActivity {
 
     Weather weather;
@@ -49,8 +51,11 @@ public class DetailedMetarActivity extends AppCompatActivity {
         time = sbTime.toString() + "Z";
 
         //formats the date basied of the system time, and then adds the date the metar specified, metars only specify day of the month and not
-       //TODO: set the date to return the correct time zone,
-        String date = new SimpleDateFormat("yyyy MMM").format(Calendar.getInstance().getTime());
+       //TODO: set the date to return the correct time zone, alarm set for midnight zulu to test
+
+        //TODO: ADDED getInstance(TimeZone.getTimeZone("UTC")) instead of getInstance()
+        //should return the date for zulu time instead of where my phone thinks it is
+        String date = new SimpleDateFormat("MMM yyyy").format(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime());
 
 
         String dateOfMonth;
@@ -71,7 +76,7 @@ public class DetailedMetarActivity extends AppCompatActivity {
 
 
         String VerbosePart1 =
-                "Date: " + date + " " + dateOfMonth + "\n" +
+                "Date: " + dateOfMonth + " " + date + "\n" +
                         "Time: " + time + "\n" +
                         "Wind direction: " + weatherValues.getMwindDirecton() + "\n";
         String VerboseWindPart = "Wind Speed: " + weatherValues.getMwindSpeed() + " " + windSpeedScale + "\n";
