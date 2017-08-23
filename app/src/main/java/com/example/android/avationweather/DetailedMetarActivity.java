@@ -50,10 +50,8 @@ public class DetailedMetarActivity extends AppCompatActivity {
         time = sbTime.toString() + "Z";
 
         //formats the date basied of the system time, and then adds the date the metar specified, metars only specify day of the month and not
-       //TODO: set the date to return the correct time zone, alarm set for midnight zulu to test
 
-        //TODO: ADDED getInstance(TimeZone.getTimeZone("UTC")) instead of getInstance()
-        //should return the date for zulu time instead of where my phone thinks it is
+        //gets the current zulu date
         String date = new SimpleDateFormat("MMM yyyy").format(Calendar.getInstance(TimeZone.getTimeZone("UTC")).getTime());
 
 
