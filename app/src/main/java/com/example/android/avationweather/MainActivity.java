@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     //TODO: fix the metar getting reset on screen rotation(right now i just disabled screen roattion #bandaid)
     //TODO: parse remarks for bad weather conditions
     //TODO: FIX the metar text disaprearing when you go to the settings menu
+    //TODO: CHANGE ROUND ICON
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int WEATHER_LOADER_ID = 1;

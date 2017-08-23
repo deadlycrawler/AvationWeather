@@ -13,7 +13,6 @@ import java.util.TimeZone;
 
 //this class displays the metar in a text View in a human readable version
 //TODO: fix the damn metar text to appear in the center of the screen on all devices or at least univorm
-//TODO: REVERSE THE DATE format
 public class DetailedMetarActivity extends AppCompatActivity {
 
     Weather weather;
