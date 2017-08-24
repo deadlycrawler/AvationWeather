@@ -27,10 +27,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     //TODO: make the "plain button just start an intent with the metar info no need to wait to call one first
     //TODO: add a sub package for the weather class and objects for weather
     //TODO: fix the metar getting reset on screen rotation(right now i just disabled screen roattion #bandaid)
+    //TODO: to fix the screen rotation issues have the global varriable Weather and when onResume/onCreate are called have it update the GUI
     //TODO: parse remarks for bad weather conditions
-    //TODO: FIX the metar text disaprearing when you go to the settings menu
-    //TODO: CHANGE ROUND ICON
-    //TODO: FIX THE CRASH WHEN NO FETCH HAS HAPPENED AND THE USER HITS SHOW DETAILED
+
+
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int WEATHER_LOADER_ID = 1;
@@ -128,14 +128,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     //called when user presses the detailed View button
     private void detailedView() {
 
-        if (noError) {
+        if (noError&&fetched) {
 
             DetailedMetarActivity activty = new DetailedMetarActivity();
             Intent i = new Intent(MainActivity.this, activty.getClass());
             i.putExtra("weatherObject", mWeather);
             startActivity(i);
         } else {
-            showToast("Weather station was invalid");
+            showToast("no weather data to display");
         }
     }
 
