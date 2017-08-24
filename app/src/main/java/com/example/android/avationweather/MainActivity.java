@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     //TODO: parse remarks for bad weather conditions
 
 
-
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int WEATHER_LOADER_ID = 1;
     private static boolean noError = true;
