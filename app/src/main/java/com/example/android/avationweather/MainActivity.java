@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     //TODO: fix the metar getting reset on screen rotation(right now i just disabled screen roattion #bandaid)
     //TODO: to fix the screen rotation issues have the global varriable Weather and when onResume/onCreate are called have it update the GUI
     //TODO: parse remarks for bad weather conditions
+    //TODO: change all Art resources into my own creattions or use free images
 
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
