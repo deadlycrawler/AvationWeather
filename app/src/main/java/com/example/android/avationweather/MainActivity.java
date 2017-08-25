@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +96,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
 
+
+
     //where it all starts, start is called when you hit the "fetch Metar" button
 
     public void MetarFetch() {
@@ -116,9 +119,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 LoaderManager loaderManager = getLoaderManager();
                 loaderManager.restartLoader(WEATHER_LOADER_ID, null, this);
 
-            }else{showToast("check length of ICAO");}
+            }else{showToast(getString(R.string.check_station_id_length));}
         } else {
-            showToast("Check Network Connectivity");
+            showToast(getString(R.string.check_network_connectivity));
 
         }
 
