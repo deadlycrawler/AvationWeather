@@ -1,12 +1,8 @@
-package com.example.android.avationweather;
+package com.example.android.avationweather.network;
 
 //this class handles the network and JSON code response, network related methods are deposited here
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,7 +13,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 
-import static com.example.android.avationweather.MainActivity.LOG_TAG;
+import static com.example.android.avationweather.Activities.MainActivity.LOG_TAG;
 
 public  class Networkhandler {
 

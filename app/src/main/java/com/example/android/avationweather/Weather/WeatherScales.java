@@ -1,10 +1,10 @@
-package com.example.android.avationweather;
+package com.example.android.avationweather.Weather;
 
 
 import java.io.Serializable;
 
 //this class is to hold the scales for various mesurement settings, im only making this to simplify the construcer for my weather OBJ
-class WeatherScales implements Serializable {
+public class WeatherScales implements Serializable {
 
    private String altimeterScale;
     private String AltitudeScale;
@@ -13,7 +13,7 @@ class WeatherScales implements Serializable {
     private String WindSpeedScale;
 
 
-    WeatherScales(String altimeterScale, String AltitudeScale, String TempScale, String VisiblityScale, String WindSpeedScale) {
+    public WeatherScales(String altimeterScale, String AltitudeScale, String TempScale, String VisiblityScale, String WindSpeedScale) {
         this.altimeterScale=altimeterScale;
         this.AltitudeScale=AltitudeScale;
         this.TempScale=TempScale;

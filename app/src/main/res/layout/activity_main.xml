@@ -7,7 +7,7 @@
     android:descendantFocusability="beforeDescendants"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context="com.example.android.avationweather.MainActivity">
+    tools:context="com.example.android.avationweather.Activities.MainActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -18,9 +18,9 @@
             android:id="@+id/putMetarHere"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Metar"
+            android:text="@string/metar"
             android:textAlignment="center"
-            android:textSize="20dp" />
+            android:textSize="25dp" />
     </ScrollView>
 
     <EditText
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:hint="station  id"
+        android:hint="@string/station_id"
         android:textAlignment="center"
         android:inputType="textNoSuggestions|textCapCharacters"
         android:maxLength="4"
@@ -47,13 +47,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Fetch METAR" />
+            android:text="@string/fetch_metar" />
 
         <Button
             android:id="@+id/metarDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Plain English"
+            android:text="@string/plain_english"
             android:layout_weight="1"
             android:textAllCaps="true"
             app:layout_constraintBottom_toBottomOf="parent"

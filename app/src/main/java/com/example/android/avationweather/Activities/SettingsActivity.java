@@ -1,4 +1,4 @@
-package com.example.android.avationweather;
+package com.example.android.avationweather.Activities;
 
 
 import android.content.SharedPreferences;
@@ -9,11 +9,12 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.android.avationweather.R;
+
 
 public class SettingsActivity extends AppCompatActivity {
 
-    //yes i know its bad to access variables directly but this was pissing me off
-   // public static boolean checkBoxstate=false;
+
 
 
     @Override
@@ -35,11 +36,7 @@ public class SettingsActivity extends AppCompatActivity {
             Preference ICAO = findPreference(getString(R.string.settings_ICAO_key));
             bindPreferenceSummaryToValue(ICAO);
 
-          //  CheckBoxPreference checkBoxPreference = (CheckBoxPreference) findPreference(getString(R.string.useDefault_key));
-          //  SettingsActivity.checkBoxstate = checkBoxPreference.isChecked();
-
         }
-
 
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -66,6 +63,5 @@ public class SettingsActivity extends AppCompatActivity {
 
         }
     }
-
 
 }

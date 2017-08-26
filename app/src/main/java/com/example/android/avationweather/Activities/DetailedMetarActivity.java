@@ -1,9 +1,15 @@
-package com.example.android.avationweather;
+package com.example.android.avationweather.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+
+import com.example.android.avationweather.R;
+import com.example.android.avationweather.Weather.CloudDetails;
+import com.example.android.avationweather.Weather.Weather;
+import com.example.android.avationweather.Weather.WeatherScales;
+import com.example.android.avationweather.Weather.WeatherValues;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

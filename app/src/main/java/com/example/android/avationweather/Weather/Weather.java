@@ -1,10 +1,10 @@
-package com.example.android.avationweather;
+package com.example.android.avationweather.Weather;
 
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-class Weather implements Serializable {
+public class Weather implements Serializable {
 
 
     private ArrayList<CloudDetails> mClouds;
@@ -14,7 +14,7 @@ class Weather implements Serializable {
     private String metar;
 
 
-    Weather(String metar, ArrayList<CloudDetails> cloudsArrayList, WeatherValues weatherValues, WeatherScales weatherScale) {
+    public Weather(String metar, ArrayList<CloudDetails> cloudsArrayList, WeatherValues weatherValues, WeatherScales weatherScale) {
 
         this.metar = metar;
         this.weatherScale = weatherScale;
@@ -22,20 +22,20 @@ class Weather implements Serializable {
         this.mClouds = cloudsArrayList;
     }
 
-    String getMetar() {
+    public String getMetar() {
         return metar;
     }
 
 
-    ArrayList<CloudDetails> getmClouds() {
+    public ArrayList<CloudDetails> getmClouds() {
         return mClouds;
     }
 
-    WeatherValues getWeatherValues() {
+    public WeatherValues getWeatherValues() {
         return weatherValues;
     }
 
-    WeatherScales getWeatherScale() {
+    public WeatherScales getWeatherScale() {
         return weatherScale;
     }
 

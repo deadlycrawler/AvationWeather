@@ -1,4 +1,4 @@
-package com.example.android.avationweather;
+package com.example.android.avationweather.Activities;
 
 import android.app.LoaderManager;
 import android.content.Context;
@@ -18,18 +18,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.avationweather.R;
+import com.example.android.avationweather.Weather.Weather;
+import com.example.android.avationweather.WeatherLoader;
+
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Weather>, SharedPreferences.OnSharedPreferenceChangeListener {
 
 
-    //TODO: add a splash screen and find an artist to make a good spash screen to replace the crap you're going to put in it
-    //TODO: Fix all the strings so that this can be easily translated
+
     //TODO: make the "plain button just start an intent with the metar info no need to wait to call one first
-    //TODO: add a sub package for the weather class and objects for weather
-    //TODO: fix the metar getting reset on screen rotation(right now i just disabled screen roattion #bandaid)
-    //TODO: to fix the screen rotation issues have the global varriable Weather and when onResume/onCreate are called have it update the GUI
+    //TODO: fix the metar getting reset on screen rotation(right now i just disabled screen rotation #bandaid)
+    //TODO: to fix the screen rotation issues have the global variable Weather and when onResume/onCreate are called have it update the GUI
     //TODO: parse remarks for bad weather conditions
-    //TODO: change all Art resources into my own creattions or use free images
+    //TODO: change all Art resources into my own creations or use free images
+    //TODO: fix the splash screen dispaly size
 
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -104,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void MetarFetch() {
         MainActivity.noError = true;
         this.userRequestedICAO = userEnterdIcao.getText().toString();
-        String fetching = "Fetching ";
+        String fetching = getString(R.string.fetching);
         if (isConnectedToInternet()) {
             if (userRequestedICAO.length() == 4) {
 
@@ -138,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             i.putExtra("weatherObject", mWeather);
             startActivity(i);
         } else {
-            showToast("no weather data to display");
+            showToast(getString(R.string.no_data));
         }
     }
 
@@ -170,8 +173,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
 
-
         return new WeatherLoader(this, concatinatedURL);
+
     }
 
     @Override
@@ -181,7 +184,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
         updateUi(weather);
-
 
     }
 
@@ -202,7 +204,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
 
     }
 

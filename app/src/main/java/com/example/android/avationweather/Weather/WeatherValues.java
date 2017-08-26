@@ -1,4 +1,4 @@
-package com.example.android.avationweather;
+package com.example.android.avationweather.Weather;
 
 //this class is to hold the values for various weather paramaters settings, im only making this to simplify the construcer for my weather OBJ
 

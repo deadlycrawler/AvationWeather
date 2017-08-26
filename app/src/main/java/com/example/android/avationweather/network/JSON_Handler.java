@@ -1,7 +1,10 @@
-package com.example.android.avationweather;
+package com.example.android.avationweather.network;
 
-import android.content.Context;
-import android.widget.Toast;
+import com.example.android.avationweather.Activities.MainActivity;
+import com.example.android.avationweather.Weather.CloudDetails;
+import com.example.android.avationweather.Weather.Weather;
+import com.example.android.avationweather.Weather.WeatherScales;
+import com.example.android.avationweather.Weather.WeatherValues;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -76,7 +79,7 @@ public class JSON_Handler {
             //if the inital JSON parse fails this method is called to see if the "noError" mesage JSON was called
             try {
 
-//TODO: find way to shwo toasts from down here or a another way to display the error, now it just over write the metar text
+//TODO: find way to show toasts from down here or a another way to display the error, now it just over write the metar text
                 JSONObject baseJsonResponse = new JSONObject(weatherJSON);
                 String Error = baseJsonResponse.getString("Error");
 
@@ -85,7 +88,7 @@ public class JSON_Handler {
 
                 return new Weather(Error,null,null,null);
             } catch (JSONException e1) {
-
+                //left blank on purpose
             }
         }
 

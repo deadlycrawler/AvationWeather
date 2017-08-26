@@ -15,7 +15,7 @@
 
 
         <activity
-            android:name=".SplashActivity"
+            android:name=".Activities.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +25,7 @@
         </activity>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".Activities.MainActivity"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -35,14 +35,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingsActivity"
-            android:label="weather settings">
+            android:name=".Activities.SettingsActivity"
+            android:label="weather settings"
+            android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.avationweather.MainActivity" />
+                android:value="com.example.android.avationweather.Activities.MainActivity" />
         </activity>
         <activity
-            android:name=".DetailedMetarActivity"
+            android:name=".Activities.DetailedMetarActivity"
             android:label="Verbose Metar Data"
             android:screenOrientation="portrait">
 

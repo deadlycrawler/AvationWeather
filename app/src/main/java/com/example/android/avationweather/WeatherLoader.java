@@ -4,10 +4,14 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.android.avationweather.network.JSON_Handler;
+import com.example.android.avationweather.network.Networkhandler;
+import com.example.android.avationweather.Weather.Weather;
+
 import java.io.IOException;
 import java.net.URL;
 
-import static com.example.android.avationweather.MainActivity.LOG_TAG;
+import static com.example.android.avationweather.Activities.MainActivity.LOG_TAG;
 
 //this class is used as part of how to make a Loader Work, its not currently working correctly tho
 

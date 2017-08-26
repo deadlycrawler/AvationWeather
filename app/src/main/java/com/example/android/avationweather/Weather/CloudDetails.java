@@ -1,4 +1,4 @@
-package com.example.android.avationweather;
+package com.example.android.avationweather.Weather;
 
 import java.io.Serializable;
 
@@ -6,22 +6,22 @@ import java.io.Serializable;
 
 //narrowed class access no longer all public now private or package protected
 
-class CloudDetails implements Serializable{
+public class CloudDetails implements Serializable{
 
     private String density;
     private String altitude;
 
-    CloudDetails(String density, String altitiude){
+    public CloudDetails(String density, String altitiude){
         this.density=density;
         this.altitude=altitiude;
 
     }
 
-    String getDensity() {
+    public String getDensity() {
         return density;
     }
 
-    String getAltitude() {
+    public String getAltitude() {
         return altitude;
     }
 }
