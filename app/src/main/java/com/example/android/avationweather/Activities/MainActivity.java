@@ -120,14 +120,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             if (userRequestedICAO.length() == 4) {
 
                 concatinatedURL = this.AVWX_REQUEST_URL + userRequestedICAO;
-                showToast(fetching + userRequestedICAO);
+                showToast(fetching +" "+ userRequestedICAO);
                 LoaderManager loaderManager = getLoaderManager();
                 loaderManager.restartLoader(WEATHER_LOADER_ID, null, this);
                 //adds a "k" for usa stations
             } else if (userRequestedICAO.length() == 3) {
                 userRequestedICAO = "K" + userRequestedICAO;
                 concatinatedURL = this.AVWX_REQUEST_URL + userRequestedICAO;
-                showToast(fetching + userRequestedICAO);
+                showToast(fetching +" "+ userRequestedICAO);
                 LoaderManager loaderManager = getLoaderManager();
                 loaderManager.restartLoader(WEATHER_LOADER_ID, null, this);
 
@@ -150,14 +150,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             if (DefaultICAO.length() == 4) {
 
                 concatinatedURL = this.AVWX_REQUEST_URL + DefaultICAO;
-                showToast(fetching + DefaultICAO);
+                showToast(fetching +" "+ DefaultICAO);
                 LoaderManager loaderManager = getLoaderManager();
                 loaderManager.restartLoader(WEATHER_LOADER_ID, null, this);
                 //adds a "k" for usa stations
             } else if (DefaultICAO.length() == 3) {
                 DefaultICAO = "K" + DefaultICAO;
                 concatinatedURL = this.AVWX_REQUEST_URL + DefaultICAO;
-                showToast(fetching + DefaultICAO);
+                showToast(fetching +" "+ DefaultICAO);
                 LoaderManager loaderManager = getLoaderManager();
                 loaderManager.restartLoader(WEATHER_LOADER_ID, null, this);
 
