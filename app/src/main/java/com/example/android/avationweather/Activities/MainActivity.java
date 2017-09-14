@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 MetarFetch();
             }
         });
-        FetchDefault.setOnClickListener(new View.OnClickListener(){
+        FetchDefault.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DefaultFetch();
@@ -100,10 +100,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         if (checkFlag) {
             String DefaultICAO = prefs.getString(getString(R.string.settings_ICAO_key), (getString(R.string.settings_DefaultICAO)));
-           // userEnterdIcao.setText(DefaultICAO);
-            FetchDefault.setText("Fetch "+DefaultICAO);
-            this.DefaultICAO=DefaultICAO;
-        }else{
+            // userEnterdIcao.setText(DefaultICAO);
+            FetchDefault.setText("Fetch " + DefaultICAO);
+            this.DefaultICAO = DefaultICAO;
+        } else {
             FetchDefault.setVisibility(View.GONE);
         }
 
@@ -112,37 +112,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
     //where it all starts, start is called when you hit the "fetch Metar" button
-
     public void MetarFetch() {
-        MainActivity.noError = true;
-        String DefaultICAO = this.DefaultICAO;
-        String fetching = getString(R.string.fetching);
-        if (isConnectedToInternet()) {
-            if (DefaultICAO.length() == 4) {
-
-                concatinatedURL = this.AVWX_REQUEST_URL + DefaultICAO;
-                showToast(fetching + DefaultICAO);
-                LoaderManager loaderManager = getLoaderManager();
-                loaderManager.restartLoader(WEATHER_LOADER_ID, null, this);
-                //adds a "k" for usa stations
-            } else if (DefaultICAO.length() == 3) {
-                DefaultICAO = " K" + DefaultICAO;
-                concatinatedURL = this.AVWX_REQUEST_URL + DefaultICAO;
-                showToast(fetching + DefaultICAO);
-                LoaderManager loaderManager = getLoaderManager();
-                loaderManager.restartLoader(WEATHER_LOADER_ID, null, this);
-
-            } else {
-                showToast(getString(R.string.check_station_id_length));
-            }
-        } else {
-            showToast(getString(R.string.check_network_connectivity));
-
-        }
-
-    }
-
-    public void DefaultFetch() {
         MainActivity.noError = true;
         this.userRequestedICAO = userEnterdIcao.getText().toString();
         String fetching = getString(R.string.fetching);
@@ -155,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 loaderManager.restartLoader(WEATHER_LOADER_ID, null, this);
                 //adds a "k" for usa stations
             } else if (userRequestedICAO.length() == 3) {
-                userRequestedICAO = " K" + userRequestedICAO;
+                userRequestedICAO = "K" + userRequestedICAO;
                 concatinatedURL = this.AVWX_REQUEST_URL + userRequestedICAO;
                 showToast(fetching + userRequestedICAO);
                 LoaderManager loaderManager = getLoaderManager();
@@ -170,6 +140,37 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
     }
+
+
+    public void DefaultFetch() {
+        MainActivity.noError = true;
+        String DefaultICAO = this.DefaultICAO;
+        String fetching = getString(R.string.fetching);
+        if (isConnectedToInternet()) {
+            if (DefaultICAO.length() == 4) {
+
+                concatinatedURL = this.AVWX_REQUEST_URL + DefaultICAO;
+                showToast(fetching + DefaultICAO);
+                LoaderManager loaderManager = getLoaderManager();
+                loaderManager.restartLoader(WEATHER_LOADER_ID, null, this);
+                //adds a "k" for usa stations
+            } else if (DefaultICAO.length() == 3) {
+                DefaultICAO = "K" + DefaultICAO;
+                concatinatedURL = this.AVWX_REQUEST_URL + DefaultICAO;
+                showToast(fetching + DefaultICAO);
+                LoaderManager loaderManager = getLoaderManager();
+                loaderManager.restartLoader(WEATHER_LOADER_ID, null, this);
+
+            } else {
+                showToast(getString(R.string.check_station_id_length));
+            }
+        } else {
+            showToast(getString(R.string.check_network_connectivity));
+
+        }
+
+    }
+
 
     //called when user presses the detailed View button
     private void detailedView() {
