@@ -7,7 +7,7 @@
     <string name="DefaultOnLoadCheckbox">Enter Default on load</string>
     <string name="check_station_id_length">check length of Station ID</string>
     <string name="check_network_connectivity">Check Network Connectivity</string>
-    <string name="fetching ">Fetching</string>
+    <string name="fetching">Fetching </string>
     <string name="no_data">no weather data to display</string>
     <string name="metar">Metar</string>
     <string name="station_id">station id</string>
