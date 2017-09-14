@@ -50,6 +50,13 @@
             android:text="@string/fetch_metar" />
 
         <Button
+            android:id="@+id/fetchDefault"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/fetch_Default" />
+
+        <Button
             android:id="@+id/metarDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

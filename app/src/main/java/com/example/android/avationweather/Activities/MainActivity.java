@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int WEATHER_LOADER_ID = 1;
     private static boolean noError = true;
     Button FetchMetar;
+    Button FetchDefault;
     Button DetailViewButton;
     EditText userEnterdIcao;
     String AVWX_REQUEST_URL = "https://avwx.rest/api/metar/";
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     String concatinatedURL;
     boolean fetched = false;
     Weather mWeather;
+    String DefaultICAO;
 
     //allows the state of noError to be set
     public static void setNoError(Boolean bool) {
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //xml assets
         FetchMetar = (Button) findViewById(R.id.fetchMetar);
         DetailViewButton = (Button) findViewById(R.id.metarDetails);
+        FetchDefault = (Button) findViewById(R.id.fetchDefault);
         userEnterdIcao = (EditText) findViewById(R.id.putICAOhere);
 
         FetchMetar.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +73,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             public void onClick(View v) {
                 MetarFetch();
             }
+        });
+        FetchDefault.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                DefaultFetch();
+            }
+
         });
         DetailViewButton.setOnClickListener(new View.OnClickListener() {
 
@@ -90,7 +100,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         if (checkFlag) {
             String DefaultICAO = prefs.getString(getString(R.string.settings_ICAO_key), (getString(R.string.settings_DefaultICAO)));
-            userEnterdIcao.setText(DefaultICAO);
+           // userEnterdIcao.setText(DefaultICAO);
+            FetchDefault.setText("Fetch "+DefaultICAO);
+            this.DefaultICAO=DefaultICAO;
+        }else{
+            FetchDefault.setVisibility(View.GONE);
         }
 
 
@@ -100,6 +114,35 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     //where it all starts, start is called when you hit the "fetch Metar" button
 
     public void MetarFetch() {
+        MainActivity.noError = true;
+        String DefaultICAO = this.DefaultICAO;
+        String fetching = getString(R.string.fetching);
+        if (isConnectedToInternet()) {
+            if (DefaultICAO.length() == 4) {
+
+                concatinatedURL = this.AVWX_REQUEST_URL + DefaultICAO;
+                showToast(fetching + DefaultICAO);
+                LoaderManager loaderManager = getLoaderManager();
+                loaderManager.restartLoader(WEATHER_LOADER_ID, null, this);
+                //adds a "k" for usa stations
+            } else if (DefaultICAO.length() == 3) {
+                DefaultICAO = " K" + DefaultICAO;
+                concatinatedURL = this.AVWX_REQUEST_URL + DefaultICAO;
+                showToast(fetching + DefaultICAO);
+                LoaderManager loaderManager = getLoaderManager();
+                loaderManager.restartLoader(WEATHER_LOADER_ID, null, this);
+
+            } else {
+                showToast(getString(R.string.check_station_id_length));
+            }
+        } else {
+            showToast(getString(R.string.check_network_connectivity));
+
+        }
+
+    }
+
+    public void DefaultFetch() {
         MainActivity.noError = true;
         this.userRequestedICAO = userEnterdIcao.getText().toString();
         String fetching = getString(R.string.fetching);

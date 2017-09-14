@@ -13,4 +13,5 @@
     <string name="station_id">station id</string>
     <string name="fetch_metar">Fetch METAR</string>
     <string name="plain_english">Plain English</string>
+    <string name="fetch_Default">Fetch Default</string>
 </resources>
