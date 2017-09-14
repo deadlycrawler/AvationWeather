@@ -1,5 +1,7 @@
 package com.example.android.avationweather.Activities;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -11,6 +13,7 @@ import com.example.android.avationweather.Weather.Weather;
 import com.example.android.avationweather.Weather.WeatherScales;
 import com.example.android.avationweather.Weather.WeatherValues;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,7 +23,7 @@ import java.util.TimeZone;
 //this class displays the metar in a text View in a human readable version
 
 
-public class DetailedMetarActivity extends AppCompatActivity {
+public class DetailedMetarActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     Weather weather;
     TextView metarDetails;
@@ -36,6 +39,12 @@ public class DetailedMetarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detailed_metar);
+
+
+        // Obtain a reference to the SharedPreferences file  And register to be notified of preference changes
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        prefs.registerOnSharedPreferenceChangeListener(this);
+
 
         metarDetails = (TextView) findViewById(R.id.metarDetails);
 
@@ -73,9 +82,8 @@ public class DetailedMetarActivity extends AppCompatActivity {
         weatherScales = weather.getWeatherScale();
 
         String windSpeedScale = weatherScales.getWindSpeedScale();
-        String TempScale = weatherScales.getTempScale();
         String AltScale = weatherScales.getAltimeterScale();
-        String DegreeSymbol = "°";//this is just a degree character, JSON responce doesnt have any specified sclae so i added in my own
+        String DegreeSymbol = "°";//this is just a degree character, JSON responce doesnt have any specified scale so i added in my own
         String visibilityScale = weatherScales.getVisiblityScale();
 
 
@@ -97,9 +105,33 @@ public class DetailedMetarActivity extends AppCompatActivity {
         }
 
 
+        String temp = " ";
+
+        Boolean Celsius;
+        Celsius = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean(getString(R.string.tempScale_key), false);
+
+        String TempScale = " ";
+
+        //truncates un needed Zeros in the Temperature
+        DecimalFormat df = new DecimalFormat("0.#");
+
+        //converts Temp depending on the state of Celsius boolean
+        if (Celsius) {
+            temp = df.format(Double.parseDouble(weatherValues.getMtemperture()));
+            TempScale = weatherScales.getTempScale();
+        }
+
+        if (!Celsius) {
+            temp = df.format(Double.parseDouble(weatherValues.getMtemperture()) * 1.8 + 32);
+            TempScale = "F";
+        }
+
+
+
+
         String VerbosePart3 =
                 "Visiblity: " + weatherValues.getVisibility() + " " + visibilityScale + "\n" +
-                        "Tempature: " + weatherValues.getMtemperture() + " " + DegreeSymbol + TempScale + "\n" +
+                        "Tempature: " + temp + " " + DegreeSymbol + TempScale + "\n" +
                         "Altimiter setting: " + weatherValues.getmAltimiter() + " " + AltScale + "\n\n";
 
 
@@ -120,6 +152,11 @@ public class DetailedMetarActivity extends AppCompatActivity {
 
         metarDetails.setText(VerboseDisplay);
 
+
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
     }
 }

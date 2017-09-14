@@ -14,4 +14,6 @@
     <string name="fetch_metar">Fetch METAR</string>
     <string name="plain_english">Plain English</string>
     <string name="fetch_Default">Fetch Default</string>
+    <string name="tempScale_key">tempScale_key</string>
+    <string name="Celsius">Celsius</string>
 </resources>

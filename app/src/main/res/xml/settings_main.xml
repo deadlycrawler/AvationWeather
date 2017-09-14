@@ -4,9 +4,9 @@
     <EditTextPreference
         android:defaultValue="@string/settings_DefaultICAO"
         android:inputType="textNoSuggestions"
+        android:key="@string/settings_ICAO_key"
         android:maxLength="4"
         android:maxLines="1"
-        android:key="@string/settings_ICAO_key"
         android:selectAllOnFocus="true"
         android:title="@string/Current_ICAO" />
 
@@ -14,8 +14,12 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="@string/useDefault_key"
-        android:title="@string/DefaultOnLoadCheckbox">
-    </CheckBoxPreference>
+        android:title="@string/DefaultOnLoadCheckbox"></CheckBoxPreference>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/tempScale_key"
+        android:title="@string/Celsius"></CheckBoxPreference>
 
 
 </PreferenceScreen>
