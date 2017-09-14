@@ -26,7 +26,6 @@ import com.example.android.avationweather.WeatherLoader;
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Weather>, SharedPreferences.OnSharedPreferenceChangeListener {
 
 
-
     //TODO: make the "plain button just start an intent with the metar info no need to wait to call one first
     //TODO: fix the metar getting reset on screen rotation(right now i just disabled screen rotation #bandaid)
     //TODO: to fix the screen rotation issues have the global variable Weather and when onResume/onCreate are called have it update the GUI
@@ -87,19 +86,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         prefs.registerOnSharedPreferenceChangeListener(this);
 
         Boolean checkFlag;
-        checkFlag=PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean(getString(R.string.useDefault_key),false);
+        checkFlag = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean(getString(R.string.useDefault_key), false);
 
-        if(checkFlag) {
+        if (checkFlag) {
             String DefaultICAO = prefs.getString(getString(R.string.settings_ICAO_key), (getString(R.string.settings_DefaultICAO)));
             userEnterdIcao.setText(DefaultICAO);
         }
 
 
-
     }
-
-
-
 
 
     //where it all starts, start is called when you hit the "fetch Metar" button
@@ -115,15 +110,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 showToast(fetching + userRequestedICAO);
                 LoaderManager loaderManager = getLoaderManager();
                 loaderManager.restartLoader(WEATHER_LOADER_ID, null, this);
-            //adds a "k" for usa stations
-            } else if(userRequestedICAO.length()==3){
-                userRequestedICAO=  "K"+userRequestedICAO;
-                concatinatedURL = this.AVWX_REQUEST_URL +userRequestedICAO;
+                //adds a "k" for usa stations
+            } else if (userRequestedICAO.length() == 3) {
+                userRequestedICAO = " K" + userRequestedICAO;
+                concatinatedURL = this.AVWX_REQUEST_URL + userRequestedICAO;
                 showToast(fetching + userRequestedICAO);
                 LoaderManager loaderManager = getLoaderManager();
                 loaderManager.restartLoader(WEATHER_LOADER_ID, null, this);
 
-            }else{showToast(getString(R.string.check_station_id_length));}
+            } else {
+                showToast(getString(R.string.check_station_id_length));
+            }
         } else {
             showToast(getString(R.string.check_network_connectivity));
 
@@ -134,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     //called when user presses the detailed View button
     private void detailedView() {
 
-        if (noError&&fetched) {
+        if (noError && fetched) {
 
             DetailedMetarActivity activty = new DetailedMetarActivity();
             Intent i = new Intent(MainActivity.this, activty.getClass());

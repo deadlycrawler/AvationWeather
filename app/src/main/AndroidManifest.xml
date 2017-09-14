@@ -44,6 +44,7 @@
         </activity>
         <activity
             android:name=".Activities.DetailedMetarActivity"
+            android:theme="@style/AppTheme"
             android:label="Verbose Metar Data"
             android:screenOrientation="portrait">
 
